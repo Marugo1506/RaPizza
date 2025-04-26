@@ -12,12 +12,12 @@ public class Commande {
 	private Vector<LigneCommande> listLigneCommande = new Vector<LigneCommande> ();
 
 // constructeur de model.Commande
-    public Commande(int id, Date date, Client c, PointRaPizza p, Livreur l) {
+    public Commande(int id, Date date, Client c, PointRaPizza p) {
         this.id_commande = id;
         this.date = date;
         this.client = c;
         this.pointRaPizza = p;
-        this.livreur = l;
+
     }
 
 // methodes

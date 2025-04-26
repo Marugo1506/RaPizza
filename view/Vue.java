@@ -6,7 +6,6 @@ import model.Model;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Vector;
 
 public class Vue extends JFrame {
@@ -25,17 +24,30 @@ public class Vue extends JFrame {
     JPanel pizzaTomatePanel;
     JPanel pizzaCremePanel;
     JPanel specialitePanel;
+    JPanel commanderPizzaPanel;
     JLabel title;
     Font titleFont;
     Font h2Font;
     Font textFont;
-    String[] pizzaNames = {"Margherita", "4 Fromages", "Royale", "V\u00E9g\u00E9tarienne", "Chorizo"};
-    String[] imagePaths = {
+    String[] pizzaBTNames = {"Margherita", "4 Fromages", "Royale", "V\u00E9g\u00E9tarienne", "Chorizo"};
+    String[] pizzaBCNames = {"Saumon", "Flammekueche"};
+    String[] pizzaSNames = {"Ail", "Marinara", "Curry", "Campione"};
+    String[] imagePBTPaths = {
             "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/margherita.jpeg",
             "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/pizza4fromages.jpeg",
             "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/royale.jpeg",
             "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/vegetarienne.jpeg",
             "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/chorizo.jpeg"
+    };
+    String[] imagePBCPaths = {
+            "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/saumon.jpg",
+            "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/flammekueche.jpg",
+    };
+    String[] imagePSPaths = {
+            "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/ail.jpg",
+            "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/marinara.jpg",
+            "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/curry.jpg",
+            "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/campione.jpg"
     };
     Vector<JButton> pizzaButtons = new Vector<>();
 
@@ -136,8 +148,8 @@ public class Vue extends JFrame {
         titlePanel = new JPanel();
         titlePanel.setBackground(Color.WHITE);
         titlePanel.setPreferredSize(new Dimension(250, 60));
-       saPanel = new JPanel();
-        saPanel.setBackground(Color.LIGHT_GRAY);
+        saPanel = new JPanel();
+        saPanel.setBackground(Color.WHITE);
         saPanel.setPreferredSize(new Dimension(550, 60));
         saPanel.setLayout(new BorderLayout());
 
@@ -158,19 +170,19 @@ public class Vue extends JFrame {
         annuler.setPreferredSize(new Dimension(150, 50));
         saPanel.add(annuler, BorderLayout.EAST);
 
-        /// /////////////////////// PIZZA TOMATE Panel ///////////////////////
+        ////////////////////////// PIZZA TOMATE Panel ///////////////////////
 
         //pizza base tomato
         pizzaTomatePanel = new JPanel(new GridLayout(2, 3));
         pizzaTomatePanel.setBackground(Color.WHITE);
 
-        for (int i = 0; i < pizzaNames.length; i++) {
+        for (int i = 0; i < pizzaBTNames.length; i++) {
             // redimensionnement de l'image
-            ImageIcon originalIcon = new ImageIcon(imagePaths[i]);
+            ImageIcon originalIcon = new ImageIcon(imagePBTPaths[i]);
             Image resizedImage = originalIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
 
             // style des boutons
-            JButton pizzaButton = new JButton(pizzaNames[i], new ImageIcon(resizedImage));
+            JButton pizzaButton = new JButton(pizzaBTNames[i], new ImageIcon(resizedImage));
             pizzaButton.setBackground(Color.WHITE);
             pizzaButton.setBorderPainted(false);
             pizzaButton.setFocusPainted(false);
@@ -185,30 +197,66 @@ public class Vue extends JFrame {
 
             pizzaTomatePanel.add(pizzaButton);
         }
-/// //// /////////////////////// PIZZA CREME Panel ///////////////////////
+        ///////////////////////// PIZZA CREME Panel ///////////////////////
         pizzaCremePanel = new JPanel(new GridLayout(2, 3));
+        pizzaCremePanel.setBackground(Color.WHITE);
+        for (int i = 0; i < pizzaBCNames.length; i++) {
+            // redimensionnement de l'image
+            ImageIcon originalIcon = new ImageIcon(imagePBCPaths[i]);
+            Image resizedImage = originalIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+
+            // style des boutons
+            JButton pizzaButton = new JButton(pizzaBCNames[i], new ImageIcon(resizedImage));
+            pizzaButton.setBackground(Color.WHITE);
+            pizzaButton.setBorderPainted(false);
+            pizzaButton.setFocusPainted(false);
+            pizzaButton.setContentAreaFilled(false);
+            pizzaButton.setOpaque(true);
+            pizzaButton.setRolloverEnabled(false);
+            pizzaButton.setFont(h2Font);
+            pizzaButton.setVerticalTextPosition(SwingConstants.BOTTOM);
+            pizzaButton.setHorizontalTextPosition(SwingConstants.CENTER);
+            pizzaButton.setPreferredSize(new Dimension(170, 180));
+            pizzaButtons.add(pizzaButton);
+
+            pizzaCremePanel.add(pizzaButton);
+        }
 
 
 /// //// /////////////////////// Specialité maison ///////////////////////
-        specialitePanel = new JPanel(new GridLayout(10, 4));
-        for(int i = 0 ; i < 40 ; i++) {
-            if(i % 2 == 0) {
-                specialitePanel.add(new JLabel("       C " ));
-            } else {
-                specialitePanel.add(new JLabel("      A " ));
-            }
+        specialitePanel = new JPanel(new GridLayout(2, 3));
+        specialitePanel.setBackground(Color.WHITE);
+        for (int i = 0; i < pizzaSNames.length; i++) {
+            // redimensionnement de l'image
+            ImageIcon originalIcon = new ImageIcon(imagePSPaths[i]);
+            Image resizedImage = originalIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+
+            // style des boutons
+            JButton pizzaButton = new JButton(pizzaSNames[i], new ImageIcon(resizedImage));
+            pizzaButton.setBackground(Color.WHITE);
+            pizzaButton.setBorderPainted(false);
+            pizzaButton.setFocusPainted(false);
+            pizzaButton.setContentAreaFilled(false);
+            pizzaButton.setOpaque(true);
+            pizzaButton.setRolloverEnabled(false);
+            pizzaButton.setFont(h2Font);
+            pizzaButton.setVerticalTextPosition(SwingConstants.BOTTOM);
+            pizzaButton.setHorizontalTextPosition(SwingConstants.CENTER);
+            pizzaButton.setPreferredSize(new Dimension(170, 180));
+            pizzaButtons.add(pizzaButton);
+
+            specialitePanel.add(pizzaButton);
         }
-///////////////////////////////////////////////////////////////
+////////////////////////// Panel pour ajouter une pizza a la commande /////////////////////////
+
+        commanderPizzaPanel = new JPanel();
 
 
-
-        // Boutons de pizzas
+        // raffraichi la vue
         updateView();
 
 
         // Ajout des panels
-
-
         this.add(panel1, BorderLayout.WEST);
         this.add(panel2, BorderLayout.CENTER);
 
@@ -228,16 +276,32 @@ public class Vue extends JFrame {
             title.setText("Nos pizzas base cr\u00E8me");
             panel2.add(titlePanel, BorderLayout.NORTH);
             panel2.add(pizzaCremePanel);
-        } else {
+        } else if(model.getBase() == 0) {
             title.setText("Sp\u00E9cialit\u00E9s de la maison");
             panel2.add(titlePanel, BorderLayout.NORTH);
             panel2.add(specialitePanel);
         }
+        else if(model.getBase() == 3) {
+            title.setText("Info sur la pizza");
+            commanderPizzaPanel.setBackground(Color.WHITE);
+            commanderPizzaPanel.setLayout(new BorderLayout());
+            //commanderPizzaPanel.add(new JLabel("Nom de la pizza : " + model.getPizza().getNom_pizza()), BorderLayout.NORTH);
+            //commanderPizzaPanel.add(new JLabel("Prix de la pizza : " + model.getPizza().getPrix_de_base() + "\u20AC"), BorderLayout.CENTER);
+            //commanderPizzaPanel.add(new JLabel("Ingrédients : " + model.getPizza().getListIngredient()), BorderLayout.SOUTH);
+
+            panel2.add(titlePanel, BorderLayout.NORTH);
+            panel2.add(commanderPizzaPanel);
+        }
 
         panel2.add(saPanel, BorderLayout.SOUTH);
 
-        //this.revalidate();
+        this.revalidate();
         this.repaint();
+    }
+
+    public void showInfoPizza(String pizzaName) {
+
+
     }
 
     public Vector<JMenuItem> getAllButtons() {

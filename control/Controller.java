@@ -3,7 +3,6 @@ package control;
 import view.Vue;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
 
 public class Controller {
     private model.Model model;
@@ -15,8 +14,8 @@ public class Controller {
         this.view = view;
     }
 
-    public void setButtonActionListener( ) {
-        // Set the action listener for the button
+    public void setMenuButtonActionListener( ) {
+        // reglage des actions listener des boutons du menu
         for(JMenuItem button : view.getAllButtons()) {
             button.addActionListener(e -> {
                 // Handle button click event
@@ -35,7 +34,7 @@ public class Controller {
                 // Handle pizza button click event
                 System.out.println("Pizza button clicked!" + button.getText());
                 //model.setBase(button.getText());
-                view.updateView();
+                view.showInfoPizza(button.getText());
             });
         }
     }

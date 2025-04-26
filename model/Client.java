@@ -23,7 +23,11 @@ public class Client {
         this.adresse = ad;
     }
 
-// methodes
+    public Client(String nom) {
+        this.nom = nom;
+    }
+
+    // methodes
     public void addPointRaPizza(PointRaPizza listPointRaPizza){
         this.listPointRaPizza.add(listPointRaPizza);
     }

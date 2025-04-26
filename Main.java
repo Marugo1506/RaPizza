@@ -1,17 +1,17 @@
+import control.ConnexionController;
 import control.Controller;
 import model.*;
+import view.ConnexionVue;
 import view.Vue;
 
-import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Vector;
 
 public class Main {
     public static void main(String[] args) {
-
-// Points de Ra-model.Pizza
         PointRaPizza pointRaPizza1 = new PointRaPizza(1, "123 Rue de la Paix");
+/**
+// Points de Ra-model.Pizza
+
         //model.PointRaPizza pointRaPizza2 = new model.PointRaPizza(2, "456 Avenue des Champs-Élysées");
 
 // Clients enregistrés
@@ -65,7 +65,7 @@ public class Main {
 
 // Mise à jour de la commande avec le livreur
         commande1.setLivreur(livreur1);
-
+*/
 // Affichage pour vérifier
         /**System.out.println("model.Commande ID: " + commande1.getId_commande());
         System.out.println("model.Commande passee le: " + commande1.getDate());
@@ -88,16 +88,40 @@ public class Main {
         System.out.println("Prix total de la commande: " + prix_total + " euros");
         **/
 
-        // interface graphique
+        /** Etapes du main :
+         * 1 - Creer un modele (qui contient toutes les infos de la pizzeria
+         * 2 - Créer une vue qui permet a un client de se connecter
+         * 3 - Lorsque le client est connecté, passée a la vue du menu
+         * 4 - Le client fais ce qu'il veux puis doit payer
+         * 5 - possiblement afficher les infos de la commande / livraison / du client */
+
         Model m1 = new Model("RaPizza");
-        Vue v1 = new Vue(m1,commande1);
-        Controller controller = new Controller(m1, v1);
-        controller.setButtonActionListener();
-        controller.setPizzaButtonActionListener();
+        ConnexionVue connexionVue = new ConnexionVue();
+        connexionVue.setPreferredSize(new Dimension(800, 600));
+        connexionVue.setVisible(true);
+        connexionVue.pack();
+        ConnexionController connexionController = new ConnexionController(m1, connexionVue);
+
+        while(true){
+
+            if(m1.isConnected()){
+                connexionVue.setVisible(false);
+                Commande commande1 = new Commande(1, new java.util.Date(), m1.getClient(), pointRaPizza1);
+                Vue v1 = new Vue(m1,commande1);
+                Controller controller = new Controller(m1, v1);
+                controller.setMenuButtonActionListener();
+                controller.setPizzaButtonActionListener();
 
 
-        v1.setPreferredSize(new Dimension(800, 600));
-        v1.setVisible(true);
-        v1.pack();
+
+                v1.setPreferredSize(new Dimension(800, 600));
+                v1.setVisible(true);
+                v1.pack();
+                break;
+            }
+            System.out.println("test");
+        }
+
+
     }
 }
