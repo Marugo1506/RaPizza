@@ -1,6 +1,6 @@
 package model;
 // import java.io.*;
-import java.util.*;
+import java.util.Vector;
 
 public class Pizza {
 
@@ -13,11 +13,12 @@ public class Pizza {
 	Vector<LigneCommande> listLigneCommande = new Vector<LigneCommande> ();
 
 // constructeur de model.Pizza
-    public Pizza(int id, String n, double p) {
+    public Pizza(int id, String n, double p, Vector<Ingredient> li) {
         this.id_pizza = id;
         // this.categorie = cat;
         this.nom_pizza = n;
         this.prix_de_base = p;
+        this.listIngredient = li;
     }
 
     // methodes
@@ -33,9 +34,12 @@ public class Pizza {
     public void setid_pizza(int id_pizza) {
         this.id_pizza = id_pizza;
     }
+    public Vector<Ingredient> getIngredients() {
+        return listIngredient;
+    }
 
-    // public void setcategorie(String categorie) {
-    //     this.categorie = categorie;
+    // public void setcategorie(String cat) {
+    //     this.categorie = cat;
     // }
 
     public void setnom_pizza(String nom_pizza) {

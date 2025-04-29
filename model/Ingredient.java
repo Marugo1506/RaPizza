@@ -24,4 +24,5 @@ public class Ingredient {
     public void addPizza(Pizza listPizza){
         this.listPizza.add(listPizza);
     }
+    public String getNom_ingredient() { return nom_ingredient; }
 }

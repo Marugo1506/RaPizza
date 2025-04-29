@@ -39,4 +39,7 @@ public class LigneCommande {
     public Pizza getPizza() {
         return pizza;
     }
+    public Commande getCommande() {
+        return commande;
+    }
 }

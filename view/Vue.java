@@ -2,6 +2,8 @@ package view;
 
 import model.Commande;
 import model.LigneCommande;
+import model.Pizza;
+import model.Ingredient;
 import model.Model;
 
 import javax.swing.*;
@@ -24,7 +26,7 @@ public class Vue extends JFrame {
     JPanel pizzaTomatePanel;
     JPanel pizzaCremePanel;
     JPanel specialitePanel;
-    JPanel commanderPizzaPanel;
+    JPanel ajouterPizzaPanel;
     JLabel title;
     Font titleFont;
     Font h2Font;
@@ -57,7 +59,7 @@ public class Vue extends JFrame {
         this.commande = coco;
 
         titleFont = new Font("Arial", Font.BOLD, 35);
-        h2Font = new Font("Arial", Font.PLAIN, 18);
+        h2Font = new Font("Arial", Font.BOLD, 22);
         textFont = new Font("Arial", Font.PLAIN, 18);
 
 
@@ -105,7 +107,7 @@ public class Vue extends JFrame {
                 item.setBackground(Color.WHITE);
                 item.setBorderPainted(false);
                 item.setPreferredSize(new Dimension(250, 45));
-                item.setFont(h2Font);
+                item.setFont(textFont);
                 item.setRolloverEnabled(false);
             }
         }
@@ -115,7 +117,7 @@ public class Vue extends JFrame {
         });
 
         buttonPanel.add(b1, BorderLayout.NORTH);
-        JLabel commandeText = new JLabel("Commande n\u00B0" + Integer.toString(commande.getId_commande())+ " :");
+        JLabel commandeText = new JLabel(" Commande n\u00B0" + Integer.toString(commande.getId_commande())+ " :");
         commandeText.setFont(h2Font);
         buttonPanel.add(commandeText, BorderLayout.SOUTH);
 
@@ -125,8 +127,8 @@ public class Vue extends JFrame {
         for (LigneCommande lc : commande.getListLigneCommande()) {
             commandPanel.add(Box.createVerticalStrut(8)); // espace entre les lignes
             commandPanel.add(new JLabel(" - "
-            + Integer.toString(lc.getQuantite()) + " " + lc.getPizza().getNom_pizza() + "  (Prix : "
-            + Double.toString(lc.getQuantite()*lc.getPizza().getPrix_de_base()) +" \u20AC)"));
+                    + Integer.toString(lc.getQuantite()) + " " + lc.getPizza().getNom_pizza() + "  (Prix : "
+                    + Double.toString(lc.getQuantite()*lc.getPizza().getPrix_de_base()) +" \u20AC)"));
         }
         commandPanel.add(Box.createVerticalStrut(20)); // espace entre les lignes
 
@@ -136,7 +138,7 @@ public class Vue extends JFrame {
         for (LigneCommande lc : commande.getListLigneCommande()) {
             pt = pt + lc.getQuantite() * lc.getPizza().getPrix_de_base();
         }
-        JLabel prixTotal = new JLabel("Total: " + Double.toString(pt) + "\u20AC");
+        JLabel prixTotal = new JLabel(" Total: " + Double.toString(pt) + "\u20AC");
         prixTotal.setFont(h2Font);
         commandPanel.add(prixTotal);
         panel1.add(buttonPanel);
@@ -249,7 +251,8 @@ public class Vue extends JFrame {
         }
 ////////////////////////// Panel pour ajouter une pizza a la commande /////////////////////////
 
-        commanderPizzaPanel = new JPanel();
+        ajouterPizzaPanel = new JPanel();
+
 
 
         // raffraichi la vue
@@ -272,25 +275,21 @@ public class Vue extends JFrame {
             title.setText("Pizzas base tomate");
             panel2.add(titlePanel, BorderLayout.NORTH);
             panel2.add(pizzaTomatePanel);
-        } else if(model.getBase() == 2) {
-            title.setText("Nos pizzas base cr\u00E8me");
+        }
+        else if(model.getBase() == 2) {
+            title.setText("Nos pizzas base crème");
             panel2.add(titlePanel, BorderLayout.NORTH);
             panel2.add(pizzaCremePanel);
-        } else if(model.getBase() == 0) {
-            title.setText("Sp\u00E9cialit\u00E9s de la maison");
+        }
+        else if(model.getBase() == 0) {
+            title.setText("Spécialités de la maison");
             panel2.add(titlePanel, BorderLayout.NORTH);
             panel2.add(specialitePanel);
         }
         else if(model.getBase() == 3) {
             title.setText("Info sur la pizza");
-            commanderPizzaPanel.setBackground(Color.WHITE);
-            commanderPizzaPanel.setLayout(new BorderLayout());
-            //commanderPizzaPanel.add(new JLabel("Nom de la pizza : " + model.getPizza().getNom_pizza()), BorderLayout.NORTH);
-            //commanderPizzaPanel.add(new JLabel("Prix de la pizza : " + model.getPizza().getPrix_de_base() + "\u20AC"), BorderLayout.CENTER);
-            //commanderPizzaPanel.add(new JLabel("Ingrédients : " + model.getPizza().getListIngredient()), BorderLayout.SOUTH);
-
             panel2.add(titlePanel, BorderLayout.NORTH);
-            panel2.add(commanderPizzaPanel);
+            panel2.add(ajouterPizzaPanel); // Utilisation de ajouterPizzaPanel
         }
 
         panel2.add(saPanel, BorderLayout.SOUTH);
@@ -299,9 +298,98 @@ public class Vue extends JFrame {
         this.repaint();
     }
 
-    public void showInfoPizza(String pizzaName) {
+    public void showInfoPizza(Pizza pizza) {
+        // Réinitialisation et configuration directe de ajouterPizzaPanel
+        ajouterPizzaPanel.removeAll();
+        ajouterPizzaPanel.setLayout(new BoxLayout(ajouterPizzaPanel, BoxLayout.Y_AXIS));
+        ajouterPizzaPanel.setBackground(Color.WHITE);
+        ajouterPizzaPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
+        // Nom de la pizza
+        JLabel nameLabel = new JLabel(pizza.getNom_pizza());
+        nameLabel.setFont(titleFont);
+        nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        // Prix
+        JLabel priceLabel = new JLabel("Prix: " + pizza.getPrix_de_base() + " €");
+        priceLabel.setFont(h2Font);
+        priceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Titre "Ingrédients"
+        JLabel ingredientsTitle = new JLabel("Ingrédients:");
+        ingredientsTitle.setFont(h2Font);
+        ingredientsTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Panel pour les ingrédients
+        JPanel ingredientsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        ingredientsPanel.setBackground(Color.WHITE);
+
+        Vector<Ingredient> ingredients = pizza.getIngredients();
+        for (int i = 0; i < ingredients.size(); i++) {
+            JLabel ingredientLabel = new JLabel(ingredients.get(i).getNom_ingredient());
+            ingredientLabel.setFont(textFont);
+            ingredientsPanel.add(ingredientLabel);
+
+            if (i < ingredients.size() - 1) {
+                JLabel commaLabel = new JLabel(", ");
+                commaLabel.setFont(textFont);
+                ingredientsPanel.add(commaLabel);
+            }
+        }
+
+        JPanel quantitePanel = new JPanel();
+        quantitePanel.setBackground(Color.WHITE);
+        quantitePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel quantite = new JLabel("Choisissez la quantité souhaitée : ");
+        quantite.setFont(h2Font);
+        quantite.setAlignmentX(Component.CENTER_ALIGNMENT);
+        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, 5, 1); // Min 1, Max 5, Step 1
+
+        JSpinner choisirQ = new JSpinner(spinnerModel);
+
+        quantitePanel.add(quantite);
+        quantitePanel.add(choisirQ);
+
+        // Boutons
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(Color.WHITE);
+
+        JButton backButton = new JButton("Retour");
+        backButton.setFont(h2Font);
+        backButton.setBackground(new Color(212, 74, 40));
+        backButton.setForeground(Color.WHITE);
+        backButton.addActionListener(e -> {
+            model.setBase(0);
+            updateView();
+        });
+
+        JButton addButton = new JButton("Ajouter à la commande");
+        addButton.setFont(h2Font);
+        addButton.setBackground(new Color(122, 158, 126));
+        addButton.setForeground(Color.WHITE);
+        addButton.addActionListener(e -> {
+            // Logique d'ajout
+        });
+
+        buttonPanel.add(backButton);
+        buttonPanel.add(Box.createHorizontalStrut(20));
+        buttonPanel.add(addButton);
+
+        // Ajout direct des composants à ajouterPizzaPanel
+        ajouterPizzaPanel.add(nameLabel);
+        ajouterPizzaPanel.add(Box.createVerticalStrut(15));
+        ajouterPizzaPanel.add(priceLabel);
+        ajouterPizzaPanel.add(Box.createVerticalStrut(15));
+        ajouterPizzaPanel.add(ingredientsTitle);
+        ajouterPizzaPanel.add(Box.createVerticalStrut(5));
+        ajouterPizzaPanel.add(ingredientsPanel);
+        ajouterPizzaPanel.add(Box.createVerticalStrut(20));
+        ajouterPizzaPanel.add(quantitePanel);
+        ajouterPizzaPanel.add(buttonPanel);
+
+        // Mise à jour de la vue
+        model.setBase(3);
+        updateView();
     }
 
     public Vector<JMenuItem> getAllButtons() {
@@ -315,4 +403,37 @@ public class Vue extends JFrame {
     public Vector<JButton> getPizzaButtons() {
         return pizzaButtons;
     }
+
+    public void updateCommandPanel() {
+        commandPanel.removeAll();
+
+        // Titre
+        commandPanel.add(new JLabel("Commande n°" + model.getCurrentCommande().getId_commande() + " :"));
+
+        // Détails
+        for (LigneCommande lc : model.getCurrentCommande().getListLigneCommande()) {
+            String line = lc.getQuantite() + " x " + lc.getPizza().getNom_pizza()
+                    + " (" + (lc.getQuantite() * lc.getPizza().getPrix_de_base()) + " €)";
+            commandPanel.add(new JLabel(line));
+        }
+
+        // Calcul du total
+        double total = model.getCurrentCommande().getListLigneCommande().stream()
+                .mapToDouble(lc -> lc.getQuantite() * lc.getPizza().getPrix_de_base())
+                .sum();
+
+        commandPanel.add(new JLabel("Total: " + total + " €"));
+
+        commandPanel.revalidate();
+        commandPanel.repaint();
+    }
+
+    public Vector<JButton> getOrderButtons() {
+        Vector<JButton> orderButtons = new Vector<>();
+        for (JButton button : pizzaButtons) {
+            orderButtons.add(button);
+        }
+        return orderButtons;
+    }
+
 }

@@ -114,6 +114,7 @@ public class Main {
 
 
 
+
                 v1.setPreferredSize(new Dimension(800, 600));
                 v1.setVisible(true);
                 v1.pack();
