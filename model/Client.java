@@ -4,19 +4,19 @@ import java.util.*;
 
 public class Client {
 
-// Default constructor
+    // Default constructor
     public Client() {
     }
 
-    private int num_tel;
+    private String num_tel;
     private String nom;
     private float solde;
     private String adresse;
-	Vector<PointRaPizza> listPointRaPizza = new Vector<PointRaPizza>();
-	Vector<Commande> listCommande = new Vector<Commande>();
+    Vector<PointRaPizza> listPointRaPizza = new Vector<PointRaPizza>();
+    Vector<Commande> listCommande = new Vector<Commande>();
 
-// constructeur de model.Client
-	public Client(int num, String n, float s, String ad) {
+    // constructeur de model.Client
+    public Client(String num, String n, float s, String ad) {
         this.num_tel = num;
         this.nom = n;
         this.solde = s;
@@ -34,7 +34,7 @@ public class Client {
     public void addCommande(Commande listCommande){
         this.listCommande.add(listCommande);
     }
-    public void setnum_tel(int num_tel) {
+    public void setnum_tel(String num_tel) {
         this.num_tel = num_tel;
     }
     public void setnom(String nom) {
@@ -46,16 +46,16 @@ public class Client {
     public void setadresse(String adresse) {
         this.adresse = adresse;
     }
-    public int getNum_tel() { 
+    public String getNum_tel() {
         return num_tel;
     }
-    public String getNom() { 
+    public String getNom() {
         return nom;
     }
-    public double getSolde() { 
+    public double getSolde() {
         return solde;
     }
-    public String getAdresse() { 
+    public String getAdresse() {
         return adresse;
     }
 }

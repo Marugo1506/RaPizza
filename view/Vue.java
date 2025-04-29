@@ -12,7 +12,7 @@ import java.util.Vector;
 
 public class Vue extends JFrame {
     Model model;
-    Commande commande;
+    Commande currentCommande;
     JPanel panel1 = new JPanel(new BorderLayout());
     JPanel panel2 = new JPanel();
     JPanel commandPanel = new JPanel();
@@ -52,11 +52,13 @@ public class Vue extends JFrame {
             "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/campione.jpg"
     };
     Vector<JButton> pizzaButtons = new Vector<>();
+    private JTextField choisirQ;
+    private JButton addButton;
 
-    public Vue(Model m, Commande coco) {
+    public Vue(Model m, Commande com) {
         super("RaPizza");
         this.model = m;
-        this.commande = coco;
+        this.currentCommande = com;
 
         titleFont = new Font("Arial", Font.BOLD, 35);
         h2Font = new Font("Arial", Font.BOLD, 22);
@@ -117,28 +119,28 @@ public class Vue extends JFrame {
         });
 
         buttonPanel.add(b1, BorderLayout.NORTH);
-        JLabel commandeText = new JLabel(" Commande n\u00B0" + Integer.toString(commande.getId_commande())+ " :");
+        JLabel commandeText = new JLabel(" Commande n\u00B0" + currentCommande.getId_commande()+ " :");
         commandeText.setFont(h2Font);
         buttonPanel.add(commandeText, BorderLayout.SOUTH);
 
         commandPanel.setBackground(new Color(250,250,230,200));
         commandPanel.setLayout(new BoxLayout(commandPanel, BoxLayout.Y_AXIS));
         commandPanel.setPreferredSize(new Dimension(250, 135));
-        for (LigneCommande lc : commande.getListLigneCommande()) {
+        for (LigneCommande lc : currentCommande.getListLigneCommande()) {
             commandPanel.add(Box.createVerticalStrut(8)); // espace entre les lignes
             commandPanel.add(new JLabel(" - "
-                    + Integer.toString(lc.getQuantite()) + " " + lc.getPizza().getNom_pizza() + "  (Prix : "
-                    + Double.toString(lc.getQuantite()*lc.getPizza().getPrix_de_base()) +" \u20AC)"));
+                    + (lc.getQuantite()) + " " + lc.getPizza().getNom_pizza() + "  (Prix : "
+                    + (lc.getQuantite()*lc.getPizza().getPrix_de_base()) +" \u20AC)"));
         }
         commandPanel.add(Box.createVerticalStrut(20)); // espace entre les lignes
 
 
         // prix total
         double pt = 0;
-        for (LigneCommande lc : commande.getListLigneCommande()) {
+        for (LigneCommande lc : currentCommande.getListLigneCommande()) {
             pt = pt + lc.getQuantite() * lc.getPizza().getPrix_de_base();
         }
-        JLabel prixTotal = new JLabel(" Total: " + Double.toString(pt) + "\u20AC");
+        JLabel prixTotal = new JLabel(" Total: " + pt + "\u20AC");
         prixTotal.setFont(h2Font);
         commandPanel.add(prixTotal);
         panel1.add(buttonPanel);
@@ -343,9 +345,8 @@ public class Vue extends JFrame {
         JLabel quantite = new JLabel("Choisissez la quantité souhaitée : ");
         quantite.setFont(h2Font);
         quantite.setAlignmentX(Component.CENTER_ALIGNMENT);
-        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, 5, 1); // Min 1, Max 5, Step 1
 
-        JSpinner choisirQ = new JSpinner(spinnerModel);
+        choisirQ = new JTextField("1", 1);
 
         quantitePanel.add(quantite);
         quantitePanel.add(choisirQ);
@@ -358,18 +359,12 @@ public class Vue extends JFrame {
         backButton.setFont(h2Font);
         backButton.setBackground(new Color(212, 74, 40));
         backButton.setForeground(Color.WHITE);
-        backButton.addActionListener(e -> {
-            model.setBase(0);
-            updateView();
-        });
 
-        JButton addButton = new JButton("Ajouter à la commande");
+        addButton = new JButton("Ajouter à la commande");
         addButton.setFont(h2Font);
         addButton.setBackground(new Color(122, 158, 126));
         addButton.setForeground(Color.WHITE);
-        addButton.addActionListener(e -> {
-            // Logique d'ajout
-        });
+
 
         buttonPanel.add(backButton);
         buttonPanel.add(Box.createHorizontalStrut(20));
@@ -392,23 +387,8 @@ public class Vue extends JFrame {
         updateView();
     }
 
-    public Vector<JMenuItem> getAllButtons() {
-        Vector<JMenuItem> pizzaButtons = new Vector<>();
-        pizzaButtons.add(spe);
-        pizzaButtons.add(bTomate);
-        pizzaButtons.add(bCreme);
-        return pizzaButtons;
-    }
-
-    public Vector<JButton> getPizzaButtons() {
-        return pizzaButtons;
-    }
-
     public void updateCommandPanel() {
         commandPanel.removeAll();
-
-        // Titre
-        commandPanel.add(new JLabel("Commande n°" + model.getCurrentCommande().getId_commande() + " :"));
 
         // Détails
         for (LigneCommande lc : model.getCurrentCommande().getListLigneCommande()) {
@@ -428,12 +408,24 @@ public class Vue extends JFrame {
         commandPanel.repaint();
     }
 
-    public Vector<JButton> getOrderButtons() {
-        Vector<JButton> orderButtons = new Vector<>();
-        for (JButton button : pizzaButtons) {
-            orderButtons.add(button);
-        }
-        return orderButtons;
+    /// /////// getters et setters /////////////
+    public Vector<JMenuItem> getAllButtons() {
+        Vector<JMenuItem> pizzaButtons = new Vector<>();
+        pizzaButtons.add(spe);
+        pizzaButtons.add(bTomate);
+        pizzaButtons.add(bCreme);
+        return pizzaButtons;
+    }
+
+    public Vector<JButton> getPizzaButtons() {
+        return pizzaButtons;
+    }
+
+    public JTextField getChoisirQuantite() {
+        return this.choisirQ;
+    }
+    public JButton getAddButton() {
+        return this.addButton;
     }
 
 }

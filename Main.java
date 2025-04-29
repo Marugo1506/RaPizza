@@ -111,9 +111,7 @@ public class Main {
                 Controller controller = new Controller(m1, v1);
                 controller.setMenuButtonActionListener();
                 controller.setPizzaButtonActionListener();
-
-
-
+                controller.setAddToOrderListener();
 
                 v1.setPreferredSize(new Dimension(800, 600));
                 v1.setVisible(true);

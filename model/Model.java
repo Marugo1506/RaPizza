@@ -9,9 +9,9 @@ public class Model {
     int base;// 0 -> spécialités, 1 -> base tomate, 2 -> base Creme, 3 -> infos pizza
     Client client;
     Vector<Client> listeUtilisateurs = new Vector<Client>(Arrays.asList(
-            new Client(39, "Alice", 50.0f, "789 Boulevard Saint-Germain"),
-            new Client(123456789, "Bob", 30.0f, "321 Rue de Rivoli"),
-            new Client(0000000000, "a", 20.0f, "456 Avenue des Champs-Élysées")));
+            new Client("6541", "Alice", 50.0f, "789 Boulevard Saint-Germain"),
+            new Client("651651", "Bob", 30.0f, "321 Rue de Rivoli"),
+            new Client("0000000000", "a", 20.0f, "456 Avenue des Champs-Élysées")));
 
     Vector <Ingredient> listeIngredients;
     private Vector<Pizza> allPizzas;

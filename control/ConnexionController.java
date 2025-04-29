@@ -15,6 +15,9 @@ public class ConnexionController {
         // Set action listeners for buttons
         view.getLoginButton().addActionListener(e -> handleLogin());
         view.getCancelButton().addActionListener(e -> handleCancel());
+        view.getCancelCreateButton().addActionListener(e -> view.switchVisibility());
+        view.getCreateButton().addActionListener(e -> view.switchVisibility());
+        view.getRegisterButton().addActionListener(e -> handleRegister());
     }
 
     private void handleLogin() {
@@ -27,6 +30,25 @@ public class ConnexionController {
 
         } else {
             JOptionPane.showMessageDialog(view, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void handleRegister() {
+        // gérer l'inscription d'un client
+        String adresse = view.getAdresseCreateField().getText();
+        String tel = view.getTelCreateField().getText();
+        String nom = view.getNameCreateField().getText();
+
+        if (adresse.isEmpty() || tel.isEmpty() || nom.isEmpty()) {
+            // Handle successful login
+            JOptionPane.showMessageDialog(view, "Saississez des Informations correctes", "Erreur", JOptionPane.ERROR_MESSAGE);
+
+        } else {
+            Client newClient = new Client(tel,nom,100 , adresse);
+            model.addUser(newClient);
+            JOptionPane.showMessageDialog(view, "Inscription réussie", "Succès", JOptionPane.INFORMATION_MESSAGE);
+            model.setConnectedUser(newClient);
+
         }
     }
 

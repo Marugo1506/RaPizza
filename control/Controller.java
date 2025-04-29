@@ -4,17 +4,18 @@ import view.Vue;
 import javax.swing.*;
 import model.Pizza;
 import model.LigneCommande;
-import model.Commande;
+import	java.util.Scanner;
 
 public class Controller {
     private model.Model model;
     private Vue view;
-    private JSpinner choisirQuantite;
+    public JTextField choisirQuantite;
 
     public Controller(model.Model m, Vue v) {
         // Constructor logic if needed
         this.model = m;
         this.view = v;
+        this.choisirQuantite = v.getChoisirQuantite();
     }
 
     public void setMenuButtonActionListener( ) {
@@ -44,21 +45,43 @@ public class Controller {
             });
         }
     }
-    public void addToOrderListener(JSpinner choisirQuantite) {
-        // Récupérer la pizza sélectionnée
-        Pizza pizza = model.getPizzaSelectionnee();
-        if (pizza != null) {
-            // Créer une nouvelle ligne de commande
-            LigneCommande ligneCommande = new LigneCommande((int) choisirQuantite.getValue(),
-                    pizza.getPrix_de_base(), model.getCurrentCommande(), pizza);
-            // Ajouter la ligne de commande à la commande
-            model.getCurrentCommande().addLigneCommande(ligneCommande);
-            JOptionPane.showMessageDialog(view, "Pizza ajoutée à la commande", "Succès", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(view, "Veuillez sélectionner une pizza", "Erreur", JOptionPane.ERROR_MESSAGE);
-        }
+    public void setChoisirQuantite(JTextField choisirQ) {
+        this.choisirQuantite = choisirQ;
     }
 
+    public void setAddToOrderListener() {
+        JButton addPizza = view.getAddButton();
+        addPizza.addActionListener(e -> addToOrder());
+    }
 
+    public void addToOrder() {
+            try {
+                // Récupérer la pizza sélectionnée et la quantité choisie
+                Pizza pizza = model.getPizzaSelectionnee();
+                Scanner scanner = new Scanner(choisirQuantite.getText());
+                if (scanner.hasNextInt()) {
+                    int q = scanner.nextInt();
+                    // Créer une nouvelle ligne de commande
+                    LigneCommande ligneCommande = new LigneCommande(q,
+                            pizza.getPrix_de_base(), model.getCurrentCommande(), pizza);
+                    // Ajouter la ligne de commande à la commande
+                    model.getCurrentCommande().addLigneCommande(ligneCommande);
+                    JOptionPane.showMessageDialog(view, "Pizza ajoutée à la commande", "Succès", JOptionPane.INFORMATION_MESSAGE);
+
+                } else {
+                    JOptionPane.showMessageDialog(view, "Nombre invalide !", "Erreur", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(view, "Erreur lors de l'ajout à la commande", "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
+    }
+
+//    public void retourMenuListener() {
+//
+//        backButton.addActionListener(e -> {
+//            model.setBase(0);
+//            view.updateView();
+//        });
+//    }
 
 }
