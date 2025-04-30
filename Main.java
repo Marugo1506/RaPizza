@@ -106,12 +106,13 @@ public class Main {
 
             if(m1.isConnected()){
                 connexionVue.setVisible(false);
+                m1.initCurrentCommande(pointRaPizza1);
                 Commande commande1 = new Commande(1, new java.util.Date(), m1.getClient(), pointRaPizza1);
                 Vue v1 = new Vue(m1,commande1);
                 Controller controller = new Controller(m1, v1);
-                controller.setMenuButtonActionListener();
-                controller.setPizzaButtonActionListener();
-                controller.setAddToOrderListener();
+                v1.setController(controller);
+
+                System.out.println("debug 2 " );
 
                 v1.setPreferredSize(new Dimension(800, 600));
                 v1.setVisible(true);

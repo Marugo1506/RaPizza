@@ -4,18 +4,20 @@ import view.Vue;
 import javax.swing.*;
 import model.Pizza;
 import model.LigneCommande;
+import model.Commande;
 import	java.util.Scanner;
 
 public class Controller {
     private model.Model model;
     private Vue view;
-    public JTextField choisirQuantite;
+
 
     public Controller(model.Model m, Vue v) {
         // Constructor logic if needed
         this.model = m;
         this.view = v;
-        this.choisirQuantite = v.getChoisirQuantite();
+        setMenuButtonActionListener();
+        setPizzaButtonActionListener();
     }
 
     public void setMenuButtonActionListener( ) {
@@ -33,11 +35,13 @@ public class Controller {
 
     public void setPizzaButtonActionListener() {
         for (JButton button : view.getPizzaButtons()) {
+            System.out.println("debug" + button.getText());
             button.addActionListener(e -> {
                 Pizza pizza = model.getPizzaParNom(button.getText());
                 if (pizza != null) {
                     model.setPizzaSelectionnee(pizza);
                     model.setBase(3); // Mode détail
+
                     view.showInfoPizza(pizza);
                 } else {
                     JOptionPane.showMessageDialog(view, "Pizza non trouvée", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -45,35 +49,65 @@ public class Controller {
             });
         }
     }
-    public void setChoisirQuantite(JTextField choisirQ) {
-        this.choisirQuantite = choisirQ;
-    }
+
 
     public void setAddToOrderListener() {
         JButton addPizza = view.getAddButton();
         addPizza.addActionListener(e -> addToOrder());
     }
 
-    public void addToOrder() {
-            try {
-                // Récupérer la pizza sélectionnée et la quantité choisie
-                Pizza pizza = model.getPizzaSelectionnee();
-                Scanner scanner = new Scanner(choisirQuantite.getText());
-                if (scanner.hasNextInt()) {
-                    int q = scanner.nextInt();
-                    // Créer une nouvelle ligne de commande
-                    LigneCommande ligneCommande = new LigneCommande(q,
-                            pizza.getPrix_de_base(), model.getCurrentCommande(), pizza);
-                    // Ajouter la ligne de commande à la commande
-                    model.getCurrentCommande().addLigneCommande(ligneCommande);
-                    JOptionPane.showMessageDialog(view, "Pizza ajoutée à la commande", "Succès", JOptionPane.INFORMATION_MESSAGE);
+    public void setAddToOrderListener(JButton addButton) {
+        addButton.addActionListener(e -> addToOrder());
+    }
 
-                } else {
-                    JOptionPane.showMessageDialog(view, "Nombre invalide !", "Erreur", JOptionPane.ERROR_MESSAGE);
-                }
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(view, "Erreur lors de l'ajout à la commande", "Erreur", JOptionPane.ERROR_MESSAGE);
+    public void addToOrder() {
+        try {
+            Pizza pizza = model.getPizzaSelectionnee();
+            if (pizza == null) {
+                throw new IllegalStateException("Aucune pizza sélectionnée");
             }
+
+            JTextField quantiteField = view.getChoisirQuantite();
+            if (quantiteField == null) {
+                throw new IllegalStateException("Le champ de quantité n'est pas initialisé");
+            }
+
+            String quantiteText = quantiteField.getText().trim();
+            if (quantiteText.isEmpty()) {
+                throw new NumberFormatException("Veuillez entrer une quantité");
+            }
+
+            int q = Integer.parseInt(quantiteText);
+            if (q <= 0) {
+                throw new NumberFormatException("La quantité doit être positive");
+            }
+
+            Commande currentCommande = model.getCurrentCommande();
+            if (currentCommande == null) {
+                throw new IllegalStateException("Aucune commande en cours");
+            }
+
+            // Crée une seule ligne de commande avec la quantité spécifiée
+            LigneCommande ligneCommande = new LigneCommande(q,
+                    pizza.getPrix_de_base(), currentCommande, pizza);
+
+            // Ajoute la ligne à la commande
+            currentCommande.addLigneCommande(ligneCommande);
+
+            // Met à jour l'affichage
+            view.updateCommandPanel();
+
+            JOptionPane.showMessageDialog(view, q + " " + pizza.getNom_pizza() + "(s) ajoutée(s) à la commande",
+                    "Succès", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(view, "Quantité invalide: " + ex.getMessage(),
+                    "Erreur", JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalStateException ex) {
+            JOptionPane.showMessageDialog(view, ex.getMessage(),
+                    "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+
     }
 
 //    public void retourMenuListener() {

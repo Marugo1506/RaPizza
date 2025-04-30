@@ -5,6 +5,7 @@ import model.LigneCommande;
 import model.Pizza;
 import model.Ingredient;
 import model.Model;
+import control.Controller;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,6 +55,8 @@ public class Vue extends JFrame {
     Vector<JButton> pizzaButtons = new Vector<>();
     private JTextField choisirQ;
     private JButton addButton;
+
+    private Controller controller;
 
     public Vue(Model m, Commande com) {
         super("RaPizza");
@@ -224,6 +227,11 @@ public class Vue extends JFrame {
             pizzaButtons.add(pizzaButton);
 
             pizzaCremePanel.add(pizzaButton);
+
+            addButton = new JButton("Ajouter à la commande");
+            addButton.setFont(h2Font);
+            addButton.setBackground(new Color(122, 158, 126));
+            addButton.setForeground(Color.WHITE);
         }
 
 
@@ -292,6 +300,9 @@ public class Vue extends JFrame {
             title.setText("Info sur la pizza");
             panel2.add(titlePanel, BorderLayout.NORTH);
             panel2.add(ajouterPizzaPanel); // Utilisation de ajouterPizzaPanel
+            if(controller != null && addButton != null) {
+                controller.setAddToOrderListener(addButton);
+            }
         }
 
         panel2.add(saPanel, BorderLayout.SOUTH);
@@ -359,12 +370,11 @@ public class Vue extends JFrame {
         backButton.setFont(h2Font);
         backButton.setBackground(new Color(212, 74, 40));
         backButton.setForeground(Color.WHITE);
-
-        addButton = new JButton("Ajouter à la commande");
-        addButton.setFont(h2Font);
-        addButton.setBackground(new Color(122, 158, 126));
-        addButton.setForeground(Color.WHITE);
-
+        backButton.addActionListener(e -> {
+            System.out.println("Retour au menu principal" + model.getBase());
+            model.setBase(model.getBaseFromPizza()); // Retour au menu principal
+            this.updateView();
+        });
 
         buttonPanel.add(backButton);
         buttonPanel.add(Box.createHorizontalStrut(20));
@@ -428,4 +438,7 @@ public class Vue extends JFrame {
         return this.addButton;
     }
 
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
 }

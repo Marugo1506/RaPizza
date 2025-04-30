@@ -179,6 +179,15 @@ public class Model {
         }
     }
 
+    public void initCurrentCommande(PointRaPizza pointLivraison) {
+        this.currentCommande = new Commande(generateNewId(), new java.util.Date(), this.client, pointLivraison);
+    }
+
+    // Méthode pour générer un nouvel ID (à adapter selon votre logique)
+    private int generateNewId() {
+        return (int)(Math.random() * 1000); // Exemple simple
+    }
+
     public void addUser(Client user) {
         this.listeUtilisateurs.add(user);
     }
@@ -217,6 +226,17 @@ public class Model {
             }
         }
         return null;
+    }
+
+    public int getBaseFromPizza() {
+        if (pizzaSelectionnee.getNom_pizza().equals("Margherita") || pizzaSelectionnee.getNom_pizza().equals("Chorizo") || pizzaSelectionnee.getNom_pizza().equals("4 Fromages") || pizzaSelectionnee.getNom_pizza().equals("Royale") || pizzaSelectionnee.getNom_pizza().equals("Végétarienne")) {
+            return 1;
+        } else if (pizzaSelectionnee.getNom_pizza().equals("Flammekueche") || pizzaSelectionnee.getNom_pizza().equals("Saumon")) {
+            return 2;
+        } else if (pizzaSelectionnee.getNom_pizza().equals("Ail") || pizzaSelectionnee.getNom_pizza().equals("Curry") || pizzaSelectionnee.getNom_pizza().equals("Campione") || pizzaSelectionnee.getNom_pizza().equals("Marinara")) {
+            return 0;
+        }
+        throw new IllegalArgumentException("Invalid pizza");
     }
 
     public void setPizzaSelectionnee(Pizza pizza) {
