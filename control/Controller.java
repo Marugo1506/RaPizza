@@ -5,6 +5,7 @@ import javax.swing.*;
 import model.Pizza;
 import model.LigneCommande;
 import model.Commande;
+import java.awt.event.ActionListener;
 import	java.util.Scanner;
 
 public class Controller {
@@ -50,13 +51,11 @@ public class Controller {
         }
     }
 
-
-    public void setAddToOrderListener() {
-        JButton addPizza = view.getAddButton();
-        addPizza.addActionListener(e -> addToOrder());
-    }
-
     public void setAddToOrderListener(JButton addButton) {
+        // Supprime tous les listeners existants
+        for (ActionListener al : addButton.getActionListeners()) {
+            addButton.removeActionListener(al);
+        }
         addButton.addActionListener(e -> addToOrder());
     }
 
@@ -87,14 +86,14 @@ public class Controller {
                 throw new IllegalStateException("Aucune commande en cours");
             }
 
-            // Crée une seule ligne de commande avec la quantité spécifiée
+            // crée une seule ligne de commande avec la quantité spécifiée
             LigneCommande ligneCommande = new LigneCommande(q,
                     pizza.getPrix_de_base(), currentCommande, pizza);
 
-            // Ajoute la ligne à la commande
+            // ajoute la ligne à la commande
             currentCommande.addLigneCommande(ligneCommande);
 
-            // Met à jour l'affichage
+            // met à jour l'affichage de la commande
             view.updateCommandPanel();
 
             JOptionPane.showMessageDialog(view, q + " " + pizza.getNom_pizza() + "(s) ajoutée(s) à la commande",

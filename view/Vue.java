@@ -12,51 +12,57 @@ import java.awt.*;
 import java.util.Vector;
 
 public class Vue extends JFrame {
-    Model model;
-    Commande currentCommande;
-    JPanel panel1 = new JPanel(new BorderLayout());
-    JPanel panel2 = new JPanel();
-    JPanel commandPanel = new JPanel();
-    JButton b1 = new JButton("\u2261 MENU");
-    JPopupMenu menuDeroulant = new JPopupMenu();
-    JMenuItem spe = new JMenuItem("~ Sp\u00E9cialit\u00E9s de la maison ~");
-    JMenuItem bTomate = new JMenuItem("~ Nos pizzas base tomate ~");
-    JMenuItem bCreme = new JMenuItem("~ Nos pizzas base cr\u00E8me ~");
-    JPanel titlePanel;
-    JPanel saPanel;
-    JPanel pizzaTomatePanel;
-    JPanel pizzaCremePanel;
-    JPanel specialitePanel;
-    JPanel ajouterPizzaPanel;
-    JLabel title;
-    Font titleFont;
-    Font h2Font;
-    Font textFont;
-    String[] pizzaBTNames = {"Margherita", "4 Fromages", "Royale", "V\u00E9g\u00E9tarienne", "Chorizo"};
-    String[] pizzaBCNames = {"Saumon", "Flammekueche"};
-    String[] pizzaSNames = {"Ail", "Marinara", "Curry", "Campione"};
-    String[] imagePBTPaths = {
+    private Model model;
+    private Controller controller;
+    private Commande currentCommande;
+
+    private JPanel panel1 = new JPanel(new BorderLayout());
+    private JPanel panel2 = new JPanel();
+    private JPanel commandPanel = new JPanel();
+    private JButton b1 = new JButton("\u2261 MENU");
+    private JButton addButton;
+    private JPopupMenu menuDeroulant = new JPopupMenu();
+    private JMenuItem spe = new JMenuItem("~ Sp\u00E9cialit\u00E9s de la maison ~");
+    private JMenuItem bTomate = new JMenuItem("~ Nos pizzas base tomate ~");
+    private JMenuItem bCreme = new JMenuItem("~ Nos pizzas base cr\u00E8me ~");
+    private JPanel titlePanel;
+    private JPanel saPanel;
+    private JPanel pizzaTomatePanel;
+    private JPanel pizzaCremePanel;
+    private JPanel specialitePanel;
+    private JPanel ajouterPizzaPanel;
+    private JLabel title;
+    private JTextField choisirQ;
+
+    private Font titleFont;
+    private Font h2Font;
+    private Font textFont;
+    private Color red = new Color(212, 74, 40);
+    private Color green = new Color(122, 168, 126);
+    private Color beige = new Color(250, 250, 230, 200);
+    private Color white = Color.WHITE;
+
+    private String[] pizzaBTNames = {"Margherita", "4 Fromages", "Royale", "V\u00E9g\u00E9tarienne", "Chorizo"};
+    private String[] pizzaBCNames = {"Saumon", "Flammekueche"};
+    private String[] pizzaSNames = {"Ail", "Marinara", "Curry", "Campione"};
+    private String[] imagePBTPaths = {
             "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/margherita.jpeg",
             "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/pizza4fromages.jpeg",
             "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/royale.jpeg",
             "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/vegetarienne.jpeg",
             "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/chorizo.jpeg"
     };
-    String[] imagePBCPaths = {
+    private String[] imagePBCPaths = {
             "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/saumon.jpg",
             "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/flammekueche.jpg",
     };
-    String[] imagePSPaths = {
+    private String[] imagePSPaths = {
             "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/ail.jpg",
             "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/marinara.jpg",
             "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/curry.jpg",
             "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/campione.jpg"
     };
-    Vector<JButton> pizzaButtons = new Vector<>();
-    private JTextField choisirQ;
-    private JButton addButton;
-
-    private Controller controller;
+    private Vector<JButton> pizzaButtons = new Vector<>();
 
     public Vue(Model m, Commande com) {
         super("RaPizza");
@@ -71,23 +77,23 @@ public class Vue extends JFrame {
 
         // Configuration de la fenêtre
         this.setLayout(new BorderLayout());
-        this.setBackground(Color.WHITE);
+        this.setBackground(white);
         this.setSize(800, 600);
 
 
 ///////////////////// Panel de gauche /////////////////////////
-        panel1.setBackground(new Color(252, 245, 235));
+        panel1.setBackground(beige);
         panel1.setPreferredSize(new Dimension(250, 600));
         panel1.setLayout(new GridLayout(2,1));
         panel1.add(b1);
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(new Color(250,250,230,200));
+        buttonPanel.setBackground(beige);
         buttonPanel.setLayout(new BorderLayout());
 
         // Configuration du bouton menu
-        b1.setBackground(Color.WHITE);
-        b1.setForeground(new Color(56, 118, 29));
+        b1.setBackground(white);
+        b1.setForeground(green);
         b1.setContentAreaFilled(false); // enleve la couleur du click
         b1.setOpaque(true); // couleur du fond
         b1.setBorderPainted(false);
@@ -102,14 +108,14 @@ public class Vue extends JFrame {
         menuDeroulant.add(bCreme);
 
         // style du menu
-        menuDeroulant.setBackground(Color.WHITE);
+        menuDeroulant.setBackground(white);
         menuDeroulant.setBorder(BorderFactory.createEmptyBorder());
 
         // style des items
         for(Component c : menuDeroulant.getComponents()) {
             if(c instanceof JMenuItem) {
                 JMenuItem item = (JMenuItem)c;
-                item.setBackground(Color.WHITE);
+                item.setBackground(white);
                 item.setBorderPainted(false);
                 item.setPreferredSize(new Dimension(250, 45));
                 item.setFont(textFont);
@@ -126,7 +132,7 @@ public class Vue extends JFrame {
         commandeText.setFont(h2Font);
         buttonPanel.add(commandeText, BorderLayout.SOUTH);
 
-        commandPanel.setBackground(new Color(250,250,230,200));
+        commandPanel.setBackground(beige);
         commandPanel.setLayout(new BoxLayout(commandPanel, BoxLayout.Y_AXIS));
         commandPanel.setPreferredSize(new Dimension(250, 135));
         for (LigneCommande lc : currentCommande.getListLigneCommande()) {
@@ -150,13 +156,13 @@ public class Vue extends JFrame {
         panel1.add(commandPanel);
 
 //////////////////// Panel de droite ////////////////////////////
-        panel2.setBackground(Color.WHITE);
+        panel2.setBackground(white);
         panel2.setLayout(new BorderLayout());
         titlePanel = new JPanel();
-        titlePanel.setBackground(Color.WHITE);
+        titlePanel.setBackground(white);
         titlePanel.setPreferredSize(new Dimension(250, 60));
         saPanel = new JPanel();
-        saPanel.setBackground(Color.WHITE);
+        saPanel.setBackground(white);
         saPanel.setPreferredSize(new Dimension(550, 60));
         saPanel.setLayout(new BorderLayout());
 
@@ -164,15 +170,15 @@ public class Vue extends JFrame {
         title.setFont(titleFont);
         titlePanel.add(title);
         JButton suivant = new JButton("Suivant");
-        suivant.setBackground(new Color(122, 158, 126));
-        suivant.setForeground(Color.WHITE);
+        suivant.setBackground(green);
+        suivant.setForeground(white);
         suivant.setFont(h2Font);
         suivant.setPreferredSize(new Dimension(150, 50));
         saPanel.add(suivant, BorderLayout.WEST);
 
         JButton annuler = new JButton("Annuler");
-        annuler.setBackground(new Color(212, 74, 40));
-        annuler.setForeground(Color.WHITE);
+        annuler.setBackground(red);
+        annuler.setForeground(white);
         annuler.setFont(h2Font);
         annuler.setPreferredSize(new Dimension(150, 50));
         saPanel.add(annuler, BorderLayout.EAST);
@@ -181,7 +187,7 @@ public class Vue extends JFrame {
 
         //pizza base tomato
         pizzaTomatePanel = new JPanel(new GridLayout(2, 3));
-        pizzaTomatePanel.setBackground(Color.WHITE);
+        pizzaTomatePanel.setBackground(white);
 
         for (int i = 0; i < pizzaBTNames.length; i++) {
             // redimensionnement de l'image
@@ -190,7 +196,7 @@ public class Vue extends JFrame {
 
             // style des boutons
             JButton pizzaButton = new JButton(pizzaBTNames[i], new ImageIcon(resizedImage));
-            pizzaButton.setBackground(Color.WHITE);
+            pizzaButton.setBackground(white);
             pizzaButton.setBorderPainted(false);
             pizzaButton.setFocusPainted(false);
             pizzaButton.setContentAreaFilled(false);
@@ -206,7 +212,7 @@ public class Vue extends JFrame {
         }
         ///////////////////////// PIZZA CREME Panel ///////////////////////
         pizzaCremePanel = new JPanel(new GridLayout(2, 3));
-        pizzaCremePanel.setBackground(Color.WHITE);
+        pizzaCremePanel.setBackground(white);
         for (int i = 0; i < pizzaBCNames.length; i++) {
             // redimensionnement de l'image
             ImageIcon originalIcon = new ImageIcon(imagePBCPaths[i]);
@@ -214,7 +220,7 @@ public class Vue extends JFrame {
 
             // style des boutons
             JButton pizzaButton = new JButton(pizzaBCNames[i], new ImageIcon(resizedImage));
-            pizzaButton.setBackground(Color.WHITE);
+            pizzaButton.setBackground(white);
             pizzaButton.setBorderPainted(false);
             pizzaButton.setFocusPainted(false);
             pizzaButton.setContentAreaFilled(false);
@@ -230,14 +236,14 @@ public class Vue extends JFrame {
 
             addButton = new JButton("Ajouter à la commande");
             addButton.setFont(h2Font);
-            addButton.setBackground(new Color(122, 158, 126));
-            addButton.setForeground(Color.WHITE);
+            addButton.setBackground(green);
+            addButton.setForeground(white);
         }
 
 
 /// //// /////////////////////// Specialité maison ///////////////////////
         specialitePanel = new JPanel(new GridLayout(2, 3));
-        specialitePanel.setBackground(Color.WHITE);
+        specialitePanel.setBackground(white);
         for (int i = 0; i < pizzaSNames.length; i++) {
             // redimensionnement de l'image
             ImageIcon originalIcon = new ImageIcon(imagePSPaths[i]);
@@ -245,7 +251,7 @@ public class Vue extends JFrame {
 
             // style des boutons
             JButton pizzaButton = new JButton(pizzaSNames[i], new ImageIcon(resizedImage));
-            pizzaButton.setBackground(Color.WHITE);
+            pizzaButton.setBackground(white);
             pizzaButton.setBorderPainted(false);
             pizzaButton.setFocusPainted(false);
             pizzaButton.setContentAreaFilled(false);
@@ -315,7 +321,7 @@ public class Vue extends JFrame {
         // Réinitialisation et configuration directe de ajouterPizzaPanel
         ajouterPizzaPanel.removeAll();
         ajouterPizzaPanel.setLayout(new BoxLayout(ajouterPizzaPanel, BoxLayout.Y_AXIS));
-        ajouterPizzaPanel.setBackground(Color.WHITE);
+        ajouterPizzaPanel.setBackground(white);
         ajouterPizzaPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Nom de la pizza
@@ -335,7 +341,7 @@ public class Vue extends JFrame {
 
         // Panel pour les ingrédients
         JPanel ingredientsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-        ingredientsPanel.setBackground(Color.WHITE);
+        ingredientsPanel.setBackground(white);
 
         Vector<Ingredient> ingredients = pizza.getIngredients();
         for (int i = 0; i < ingredients.size(); i++) {
@@ -351,7 +357,7 @@ public class Vue extends JFrame {
         }
 
         JPanel quantitePanel = new JPanel();
-        quantitePanel.setBackground(Color.WHITE);
+        quantitePanel.setBackground(white);
         quantitePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         JLabel quantite = new JLabel("Choisissez la quantité souhaitée : ");
         quantite.setFont(h2Font);
@@ -364,12 +370,12 @@ public class Vue extends JFrame {
 
         // Boutons
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(Color.WHITE);
+        buttonPanel.setBackground(white);
 
         JButton backButton = new JButton("Retour");
         backButton.setFont(h2Font);
-        backButton.setBackground(new Color(212, 74, 40));
-        backButton.setForeground(Color.WHITE);
+        backButton.setBackground(red);
+        backButton.setForeground(white);
         backButton.addActionListener(e -> {
             System.out.println("Retour au menu principal" + model.getBase());
             model.setBase(model.getBaseFromPizza()); // Retour au menu principal
@@ -402,7 +408,7 @@ public class Vue extends JFrame {
 
         // Détails
         for (LigneCommande lc : model.getCurrentCommande().getListLigneCommande()) {
-            String line = lc.getQuantite() + " x " + lc.getPizza().getNom_pizza()
+            String line = "  - " + lc.getQuantite() + " x " + lc.getPizza().getNom_pizza()
                     + " (" + (lc.getQuantite() * lc.getPizza().getPrix_de_base()) + " €)";
             commandPanel.add(new JLabel(line));
         }
@@ -412,7 +418,7 @@ public class Vue extends JFrame {
                 .mapToDouble(lc -> lc.getQuantite() * lc.getPizza().getPrix_de_base())
                 .sum();
 
-        commandPanel.add(new JLabel("Total: " + total + " €"));
+        commandPanel.add(new JLabel(" Total: " + total + " €"));
 
         commandPanel.revalidate();
         commandPanel.repaint();
