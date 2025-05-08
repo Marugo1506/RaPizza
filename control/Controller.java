@@ -109,12 +109,19 @@ public class Controller {
 
     }
 
-//    public void retourMenuListener() {
-//
-//        backButton.addActionListener(e -> {
-//            model.setBase(0);
-//            view.updateView();
+//    public void menuListener(JButton b) {
+//        b.addActionListener(e -> {
+//            view.showMenuDeroulant();
 //        });
 //    }
+
+    public void retourListener(JButton button) {
+
+        button.addActionListener(e -> {
+            System.out.println("Retour au menu principal" + model.getBase());
+            model.setBase(model.getBaseFromPizza()); // Retour au menu principal
+            view.updateView();
+        });
+    }
 
 }

@@ -376,11 +376,7 @@ public class Vue extends JFrame {
         backButton.setFont(h2Font);
         backButton.setBackground(red);
         backButton.setForeground(white);
-        backButton.addActionListener(e -> {
-            System.out.println("Retour au menu principal" + model.getBase());
-            model.setBase(model.getBaseFromPizza()); // Retour au menu principal
-            this.updateView();
-        });
+        controller.retourListener(backButton);
 
         buttonPanel.add(backButton);
         buttonPanel.add(Box.createHorizontalStrut(20));
@@ -417,8 +413,9 @@ public class Vue extends JFrame {
         double total = model.getCurrentCommande().getListLigneCommande().stream()
                 .mapToDouble(lc -> lc.getQuantite() * lc.getPizza().getPrix_de_base())
                 .sum();
-
-        commandPanel.add(new JLabel(" Total: " + total + " €"));
+        JLabel tot = new JLabel(" Total: " + total + " €");
+        tot.setFont(h2Font);
+        commandPanel.add(tot);
 
         commandPanel.revalidate();
         commandPanel.repaint();
