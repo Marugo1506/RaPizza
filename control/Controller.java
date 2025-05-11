@@ -2,9 +2,14 @@ package control;
 
 import view.Vue;
 import javax.swing.*;
+import javax.swing.plaf.ViewportUI;
+
 import model.Pizza;
 import model.LigneCommande;
 import model.Commande;
+import view.VuePayement;
+
+import java.awt.*;
 import java.awt.event.ActionListener;
 import	java.util.Scanner;
 
@@ -114,6 +119,50 @@ public class Controller {
 //            view.showMenuDeroulant();
 //        });
 //    }
+public void setSuivantBoutonActionListener(JButton bouton){
+    bouton.addActionListener(e -> {
+        // Vérifie si la commande n'est pas vide
+        if (model.getCurrentCommande().getListLigneCommande().isEmpty()) {
+            JOptionPane.showMessageDialog(view, "Votre commande est vide", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Passe en mode paiement
+        model.paye();
+        view.setVisible(false); // Cache la vue actuelle
+
+        // Crée et affiche la vue de paiement
+        VuePayement vp = new VuePayement(model,this);
+        vp.setPreferredSize(new Dimension(800, 600));
+        vp.pack();
+        vp.setVisible(true);
+    });
+}
+    public void setAnnulerBoutonActionListener(JButton bouton){
+        bouton.addActionListener(e -> {
+            int response = JOptionPane.showConfirmDialog(view,
+                    "Voulez-vous vraiment annuler et vous déconnecter ?",
+                    "Confirmation",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (response == JOptionPane.YES_OPTION) {
+                SwingUtilities.invokeLater(() -> {
+                    view.dispose(); // Ferme la fenêtre de commande
+                    model.reinitialiserCommande();
+                    model.disconnect(); // Déconnecte l'utilisateur
+                }); // Ferme la fenêtre principale
+                //System.exit(0);
+            }
+        });
+    }
+
+    public void setDeleteButtonActionListener(JButton deleteButton, LigneCommande lc){
+        deleteButton.addActionListener(e -> {
+            System.out.println("Supprimer " + lc.getPizza().getNom_pizza());
+            model.getCurrentCommande().removeLigneCommande(lc);
+            view.updateCommandPanel(); // Rafraîchir l'affichage
+        });
+    }
 
     public void retourListener(JButton button) {
 
@@ -124,4 +173,16 @@ public class Controller {
         });
     }
 
+    public void setRechargeBoutonAction(JButton rechargeButton, VuePayement vp) {
+        rechargeButton.addActionListener(e-> vp.rechargerSolde());
+    }
+    public void setPayButtonAction(JButton payButton, VuePayement vp) {
+        payButton.addActionListener(e -> {
+            vp.processPayment();
+            model.reinitialiserCommande();
+            view.setVisible(true);
+            view.updateCommandPanel();
+            view.updateView();
+        });
+    }
 }

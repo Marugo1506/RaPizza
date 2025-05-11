@@ -24,7 +24,7 @@ public class Commande {
     public void addLigneCommande(LigneCommande listLigneCommande){
         this.listLigneCommande.add(listLigneCommande);
     }
-
+    public void removeLigneCommande(LigneCommande lc) { this.listLigneCommande.remove(lc);}
     public int getId_commande(){ 
         return id_commande;
     }

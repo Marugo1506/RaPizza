@@ -6,12 +6,14 @@ import java.util.Vector;
 public class Model {
     
     public String oui;
+    private boolean paying = false;
     int base;// 0 -> spécialités, 1 -> base tomate, 2 -> base Creme, 3 -> infos pizza
     Client client;
+    private static int commandeID = 0;
     Vector<Client> listeUtilisateurs = new Vector<Client>(Arrays.asList(
             new Client("6541", "Alice", 50.0f, "789 Boulevard Saint-Germain"),
             new Client("651651", "Bob", 30.0f, "321 Rue de Rivoli"),
-            new Client("0000000000", "a", 20.0f, "456 Avenue des Champs-Élysées")));
+            new Admin("0000000000", "a", 20.0f, "456 Avenue des Champs-Élysées")));
 
     Vector <Ingredient> listeIngredients;
     private Vector<Pizza> allPizzas;
@@ -24,6 +26,7 @@ public class Model {
         this.oui = o;
         base = 0;
         this.listeIngredients = new Vector<Ingredient>();
+        this.paying = false;
         this.allPizzas = new Vector<Pizza>();
         initialiserIngredients();
         initialiserPizzas();
@@ -185,7 +188,8 @@ public class Model {
 
     // Méthode pour générer un nouvel ID (à adapter selon votre logique)
     private int generateNewId() {
-        return (int)(Math.random() * 1000); // Exemple simple
+        commandeID++;
+        return commandeID;
     }
 
     public void addUser(Client user) {
@@ -206,6 +210,7 @@ public class Model {
     public void setConnectedUser(Client c){
         this.client = c;
     }
+    public void disconnect(){this.client = null;}
 
     public Client getClient(){
         return client;
@@ -213,7 +218,7 @@ public class Model {
     public boolean isConnected(){
         return  (client != null);
     }
-
+    public boolean isPaying(){return paying;}
     public int getBase() {
         return base;
     }
@@ -246,5 +251,15 @@ public class Model {
     public Pizza getPizzaSelectionnee() {
         return pizzaSelectionnee;
     }
+
+    public void paye(){this.paying = true;}
+    public void stopPaye(){this.paying = false;}
+
+    public void reinitialiserCommande(){
+        this.base = 0;
+        this.currentCommande = new Commande(generateNewId(), new java.util.Date(), this.client, this.currentCommande.getPointRaPizza());
+    }
+
+    public Vector<Client> getUsers(){return this.listeUtilisateurs;}
 }
 

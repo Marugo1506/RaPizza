@@ -34,33 +34,36 @@ public class Vue extends JFrame {
     private JLabel title;
     private JTextField choisirQ;
 
+    private JButton suivant;
+    private JButton annuler;
+
     private Font titleFont;
     private Font h2Font;
     private Font textFont;
-    private Color red = new Color(212, 74, 40);
-    private Color green = new Color(122, 168, 126);
-    private Color beige = new Color(250, 250, 230, 200);
-    private Color white = Color.WHITE;
+    public static Color red = new Color(212, 74, 40);
+    public static Color green = new Color(122, 168, 126);
+    public static Color beige = new Color(250, 250, 230, 255);
+    public static Color white = Color.WHITE;
 
     private String[] pizzaBTNames = {"Margherita", "4 Fromages", "Royale", "V\u00E9g\u00E9tarienne", "Chorizo"};
     private String[] pizzaBCNames = {"Saumon", "Flammekueche"};
     private String[] pizzaSNames = {"Ail", "Marinara", "Curry", "Campione"};
     private String[] imagePBTPaths = {
-            "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/margherita.jpeg",
-            "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/pizza4fromages.jpeg",
-            "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/royale.jpeg",
-            "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/vegetarienne.jpeg",
-            "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/chorizo.jpeg"
+            "D:/Margo/java/projetPizza/RaPizza/images/margherita.jpeg",
+            "D:/Margo/java/projetPizza/RaPizza/images/pizza4fromages.jpeg",
+            "D:/Margo/java/projetPizza/RaPizza/images/royale.jpeg",
+            "D:/Margo/java/projetPizza/RaPizza/images/vegetarienne.jpeg",
+            "D:/Margo/java/projetPizza/RaPizza/images/chorizo.jpeg"
     };
     private String[] imagePBCPaths = {
-            "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/saumon.jpg",
-            "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/flammekueche.jpg",
+            "D:/Margo/java/projetPizza/RaPizza/images/saumon.jpg",
+            "D:/Margo/java/projetPizza/RaPizza/images/flammekueche.jpg",
     };
     private String[] imagePSPaths = {
-            "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/ail.jpg",
-            "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/marinara.jpg",
-            "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/curry.jpg",
-            "C:/Users/Margo/Desktop/licence info/SEMESTRE 4/POO-Java/projet Rapizza/images/campione.jpg"
+            "D:/Margo/java/projetPizza/RaPizza/images/ail.jpg",
+            "D:/Margo/java/projetPizza/RaPizza/images/marinara.jpg",
+            "D:/Margo/java/projetPizza/RaPizza/images/curry.jpg",
+            "D:/Margo/java/projetPizza/RaPizza/images/campione.jpg"
     };
     private Vector<JButton> pizzaButtons = new Vector<>();
 
@@ -78,7 +81,7 @@ public class Vue extends JFrame {
         // Configuration de la fenêtre
         this.setLayout(new BorderLayout());
         this.setBackground(white);
-        this.setSize(800, 600);
+        this.setSize(800, 1200);
 
 
 ///////////////////// Panel de gauche /////////////////////////
@@ -169,18 +172,19 @@ public class Vue extends JFrame {
         title = new JLabel("Pas encore modifié");
         title.setFont(titleFont);
         titlePanel.add(title);
-        JButton suivant = new JButton("Suivant");
+        suivant = new JButton("Suivant");
         suivant.setBackground(green);
         suivant.setForeground(white);
         suivant.setFont(h2Font);
         suivant.setPreferredSize(new Dimension(150, 50));
         saPanel.add(suivant, BorderLayout.WEST);
 
-        JButton annuler = new JButton("Annuler");
+        annuler = new JButton("Annuler");
         annuler.setBackground(red);
         annuler.setForeground(white);
         annuler.setFont(h2Font);
         annuler.setPreferredSize(new Dimension(150, 50));
+
         saPanel.add(annuler, BorderLayout.EAST);
 
         ////////////////////////// PIZZA TOMATE Panel ///////////////////////
@@ -401,12 +405,45 @@ public class Vue extends JFrame {
 
     public void updateCommandPanel() {
         commandPanel.removeAll();
+        commandPanel.setLayout(new BoxLayout(commandPanel, BoxLayout.Y_AXIS));
+        commandPanel.setBackground(beige);
 
-        // Détails
+        // Style pour les éléments
+        Font itemFont = new Font("Arial", Font.PLAIN, 14);
+        Color buttonColor = red; // Rouge pour le bouton supprimer
+
+        // Détails des lignes de commande
         for (LigneCommande lc : model.getCurrentCommande().getListLigneCommande()) {
-            String line = "  - " + lc.getQuantite() + " x " + lc.getPizza().getNom_pizza()
-                    + " (" + (lc.getQuantite() * lc.getPizza().getPrix_de_base()) + " €)";
-            commandPanel.add(new JLabel(line));
+            JPanel linePanel = new JPanel(new BorderLayout());
+            linePanel.setBackground(beige);
+            linePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+            linePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+
+            // Partie texte (information sur la pizza)
+            String lineText = String.format("%d x %s (%.2f €)",
+                    lc.getQuantite(),
+                    lc.getPizza().getNom_pizza(),
+                    lc.getQuantite() * lc.getPizza().getPrix_de_base());
+
+            JLabel itemLabel = new JLabel(lineText);
+            itemLabel.setFont(itemFont);
+            linePanel.add(itemLabel, BorderLayout.CENTER);
+
+            // Bouton de suppression
+            JButton deleteButton = new JButton("X");
+            deleteButton.setBackground(buttonColor);
+            deleteButton.setBorderPainted(false);
+            deleteButton.setFocusPainted(false);
+            deleteButton.setPreferredSize(new Dimension(50, 25));
+            controller.setDeleteButtonActionListener(deleteButton,lc);
+
+
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            buttonPanel.setBackground(new Color(250, 250, 230, 200));
+            buttonPanel.add(deleteButton);
+
+            linePanel.add(buttonPanel, BorderLayout.EAST);
+            commandPanel.add(linePanel);
         }
 
         // Calcul du total
@@ -443,5 +480,7 @@ public class Vue extends JFrame {
 
     public void setController(Controller controller) {
         this.controller = controller;
+        controller.setAnnulerBoutonActionListener(annuler);
+        controller.setSuivantBoutonActionListener(suivant);
     }
 }

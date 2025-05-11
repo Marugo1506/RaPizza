@@ -1,8 +1,11 @@
 import control.ConnexionController;
 import control.Controller;
+import control.ControllerAdmin;
 import model.*;
 import view.ConnexionVue;
 import view.Vue;
+import view.VueAdmin;
+import view.VuePayement;
 
 import java.awt.*;
 
@@ -96,30 +99,63 @@ public class Main {
          * 5 - possiblement afficher les infos de la commande / livraison / du client */
 
         Model m1 = new Model("RaPizza");
-        ConnexionVue connexionVue = new ConnexionVue();
-        connexionVue.setPreferredSize(new Dimension(800, 600));
-        connexionVue.setVisible(true);
-        connexionVue.pack();
-        ConnexionController connexionController = new ConnexionController(m1, connexionVue);
+        while(true) {
+            // Afficher la vue de connexion
+            ConnexionVue connexionVue = new ConnexionVue();
+            connexionVue.setPreferredSize(new Dimension(800, 600));
+            connexionVue.setVisible(true);
+            connexionVue.pack();
+            ConnexionController connexionController = new ConnexionController(m1, connexionVue);
 
-        while(true){
+            // Attendre la connexion
+            while(!m1.isConnected()) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
 
-            if(m1.isConnected()){
+            if(m1.getClient() instanceof Admin){
+
+                connexionVue.setVisible(false);
+
+                VueAdmin vueAdmin = new VueAdmin(m1);
+                ControllerAdmin controllerAdmin = new ControllerAdmin(m1,vueAdmin);
+                vueAdmin.setController(controllerAdmin);
+                vueAdmin.setPreferredSize(new Dimension(1200, 900 ));
+                vueAdmin.setVisible(true);
+                vueAdmin.pack();
+                while(m1.isConnected()) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            else {
                 connexionVue.setVisible(false);
                 m1.initCurrentCommande(pointRaPizza1);
-                Commande commande1 = new Commande(1, new java.util.Date(), m1.getClient(), pointRaPizza1);
-                Vue v1 = new Vue(m1,commande1);
+                Vue v1 = new Vue(m1, m1.getCurrentCommande());
                 Controller controller = new Controller(m1, v1);
                 v1.setController(controller);
-
-                System.out.println("debug 2 " );
-
-                v1.setPreferredSize(new Dimension(800, 600));
+                v1.setPreferredSize(new Dimension(1200, 900 ));
                 v1.setVisible(true);
                 v1.pack();
-                break;
+
+                // Attendre que l'utilisateur se déconnecte (via le bouton Annuler)
+                while(m1.isConnected()) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // Lorsque déconnecté, fermer la vue principale et recommencer le cycle
+                v1.dispose();
             }
-            System.out.println("test");
         }
 
 
