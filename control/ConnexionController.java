@@ -22,9 +22,9 @@ public class ConnexionController {
 
     private void handleLogin() {
         String username = view.getUsername();
-        String password = view.getPassword();
+        String tel = view.getPassword();
 
-        if (model.isUser(new Client(username))) {
+        if (model.isUser(new Client(username),tel)) {
             // Handle successful login
             System.out.println("Login successful for user: " + username);
 
@@ -39,10 +39,9 @@ public class ConnexionController {
         String tel = view.getTelCreateField().getText();
         String nom = view.getNameCreateField().getText();
 
-        if (adresse.isEmpty() || tel.isEmpty() || nom.isEmpty()) {
-            // Handle successful login
+        if (adresse.isEmpty() || tel.isEmpty() || nom.isEmpty()
+        || !tel.matches("[0-9]{10}")) {
             JOptionPane.showMessageDialog(view, "Saississez des Informations correctes", "Erreur", JOptionPane.ERROR_MESSAGE);
-
         } else {
             Client newClient = new Client(tel,nom,100 , adresse);
             model.addUser(newClient);

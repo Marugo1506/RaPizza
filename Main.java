@@ -113,7 +113,7 @@ public class Main {
             connexionVue.pack();
             ConnexionController connexionController = new ConnexionController(m1, connexionVue);
 
-            // Attendre la connexion
+            // Attendre la connexion (passe la boucle quand le client est connecté)
             while(!m1.isConnected()) {
                 try {
                     Thread.sleep(100);
@@ -122,6 +122,7 @@ public class Main {
                 }
             }
 
+            // Si la personne qui s'est connectée est un admin ou pas
             if(m1.getClient() instanceof Admin){
 
                 connexionVue.setVisible(false);
@@ -132,6 +133,8 @@ public class Main {
                 vueAdmin.setPreferredSize(new Dimension(1200, 900 ));
                 vueAdmin.setVisible(true);
                 vueAdmin.pack();
+
+                // Tant que l'admin est connecté on fait rien dans le main
                 while(m1.isConnected()) {
                     try {
                         Thread.sleep(100);
@@ -140,7 +143,7 @@ public class Main {
                     }
                 }
             }
-            else {
+            else { //coté client
                 connexionVue.setVisible(false);
                 m1.initCurrentCommande(pointRaPizza1);
                 Vue v1 = new Vue(m1, m1.getCurrentCommande());

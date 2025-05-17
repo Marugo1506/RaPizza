@@ -13,8 +13,8 @@ public class Model {
     private static int commandeID = 0;
     Vector<Client> listeUtilisateurs = new Vector<Client>(Arrays.asList(
             new Client("6541", "Alice", 50.0f, "789 Boulevard Saint-Germain"),
-            new Client("651651", "Bob", 30.0f, "321 Rue de Rivoli"),
-            new Admin("0000000000", "a", 20.0f, "456 Avenue des Champs-Élysées")));
+            new Client("123", "Bob", 30.0f, "321 Rue de Rivoli"),
+            new Admin("000", "a", 20.0f, "456 Avenue des Champs-Élysées")));
 
     Vector <Ingredient> listeIngredients;
     private Vector<Pizza> allPizzas;
@@ -30,10 +30,7 @@ public class Model {
         base = 0;
         this.listeIngredients = new Vector<Ingredient>();
         this.pointsLivraison = livraisons;
-        this.listeCommandes = new Vector<>(Arrays.asList(
-                new Commande(0,new java.util.Date(), listeUtilisateurs.get(1),
-                        pointsLivraison.get(0))));
-        this.listeCommandes.get(0).setLivreur(l.get(0));
+        this.listeCommandes = new Vector<>();
         this.livreurs = l;
         this.paying = false;
         this.allPizzas = new Vector<Pizza>();
@@ -214,9 +211,9 @@ public class Model {
         this.listeUtilisateurs.add(user);
     }
 
-    public boolean isUser(Client user) {
+    public boolean isUser(Client user, String tel) {
         for (Client u : listeUtilisateurs) {
-            if (u.getNom().equals(user.getNom())) {
+            if (u.getNom().equals(user.getNom()) && u.getNum_tel().equals(tel)) {
                 // u a toutes les informations de l'utilisateur car il est dans la liste des users
                 setConnectedUser(u);
                 return true;

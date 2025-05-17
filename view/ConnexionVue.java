@@ -45,7 +45,7 @@ public class ConnexionVue extends JFrame {
         nameField.setBounds(150, 10, 120, 25);
         panel.add(nameField);
 
-        JLabel passwordLabel = new JLabel("Mot de passe:");
+        JLabel passwordLabel = new JLabel("Téléphone:");
         passwordLabel.setBounds(10, 40, 150, 25);
         panel.add(passwordLabel);
 

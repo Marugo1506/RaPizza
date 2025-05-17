@@ -77,6 +77,13 @@ public class VueAdmin extends JFrame {
                 mainPanel.add(new JLabel("Livreurs : "));
                 mainPanel.add(new JLabel(""));
                 for(Livreur l : m.getLivreurs()){
+
+                    String idsCommandes = "";
+                    for (Commande c : l.listCommande) {
+                        idsCommandes = idsCommandes + c.getId_commande() + " - ";
+                    }
+
+
                     mainPanel.add(
                             new JLabel("ID : " + l.id_livreur
                                     + " | Nom du Livreur : " + l.nom
@@ -84,6 +91,8 @@ public class VueAdmin extends JFrame {
                                     + " | Nombre de commandes liées au Livreur : " +
                                     l.listCommande.size()
                                     + " | "
+                                    + "ID des commandes : "
+                                    + idsCommandes
                             )
                     );
                 }

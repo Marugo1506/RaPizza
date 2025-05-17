@@ -28,7 +28,6 @@ public class VuePayement extends JFrame {
         // Création des panels
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 30, 30));
         mainPanel.setBackground(new Color(252, 245, 235));
 
         // Header avec logo/titre
@@ -62,11 +61,8 @@ public class VuePayement extends JFrame {
         JPanel paymentPanel = createPaymentPanel();
 
         mainPanel.add(headerPanel);
-        mainPanel.add(Box.createVerticalStrut(20));
         mainPanel.add(clientPanel);
-        mainPanel.add(Box.createVerticalStrut(20));
         mainPanel.add(commandPanel);
-        mainPanel.add(Box.createVerticalStrut(20));
         mainPanel.add(paymentPanel);
 
         this.add(mainPanel, BorderLayout.CENTER);
@@ -97,9 +93,6 @@ public class VuePayement extends JFrame {
             panel.add(itemPanel);
             total += lc.getQuantite() * lc.getPizza().getPrix_de_base();
         }
-
-        // Ligne de séparation
-        panel.add(new JSeparator(SwingConstants.HORIZONTAL));
 
         // Total
         JPanel totalPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -176,6 +169,8 @@ public class VuePayement extends JFrame {
     }
 
     public void processPayment() {
+
+        // Récupère pour chaque ligne la quantité de pizza * le prix de la pizza
         double total = currentCommande.getListLigneCommande().stream()
                 .mapToDouble(lc -> lc.getQuantite() * lc.getPizza().getPrix_de_base())
                 .sum();
@@ -201,7 +196,7 @@ public class VuePayement extends JFrame {
                 JOptionPane.INFORMATION_MESSAGE);
 
         // Fermeture de la fenêtre
-        this.dispose();
+        this.dispose(); //libère la mémoire de l'instance de VuePayement
         model.stopPaye();
         model.addCommandes(this.currentCommande);
         model.setACommandeToLivreur();
