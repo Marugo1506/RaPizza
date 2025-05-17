@@ -203,6 +203,8 @@ public class VuePayement extends JFrame {
         // Fermeture de la fenêtre
         this.dispose();
         model.stopPaye();
+        model.addCommandes(this.currentCommande);
+        model.setACommandeToLivreur();
     }
 
     private void updateSoldeDisplay() {

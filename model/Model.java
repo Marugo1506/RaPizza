@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Vector;
 
 public class Model {
@@ -19,13 +20,21 @@ public class Model {
     private Vector<Pizza> allPizzas;
     private Pizza pizzaSelectionnee;
     private Commande currentCommande;
-
-
+    private Vector<Commande> listeCommandes;
+    private Vector<PointRaPizza> pointsLivraison;
+    private Vector<Livreur> livreurs;
+    private int compteurLivreur = 0;
     // Constructeur
-    public Model(String o) {
+    public Model(String o,Vector<PointRaPizza> livraisons , Vector<Livreur> l) {
         this.oui = o;
         base = 0;
         this.listeIngredients = new Vector<Ingredient>();
+        this.pointsLivraison = livraisons;
+        this.listeCommandes = new Vector<>(Arrays.asList(
+                new Commande(0,new java.util.Date(), listeUtilisateurs.get(1),
+                        pointsLivraison.get(0))));
+        this.listeCommandes.get(0).setLivreur(l.get(0));
+        this.livreurs = l;
         this.paying = false;
         this.allPizzas = new Vector<Pizza>();
         initialiserIngredients();
@@ -184,12 +193,21 @@ public class Model {
 
     public void initCurrentCommande(PointRaPizza pointLivraison) {
         this.currentCommande = new Commande(generateNewId(), new java.util.Date(), this.client, pointLivraison);
+        this.currentCommande.setLivreur(nextLivreurs());
     }
 
     // Méthode pour générer un nouvel ID (à adapter selon votre logique)
     private int generateNewId() {
         commandeID++;
         return commandeID;
+    }
+
+    private Livreur nextLivreurs(){
+        compteurLivreur++;
+        if(compteurLivreur >= this.livreurs.size()){
+            compteurLivreur = 0;
+        }
+        return this.livreurs.get(compteurLivreur);
     }
 
     public void addUser(Client user) {
@@ -261,5 +279,13 @@ public class Model {
     }
 
     public Vector<Client> getUsers(){return this.listeUtilisateurs;}
+    public Vector<Commande> getCommandes(){return this.listeCommandes;}
+    public void addCommandes(Commande c){ this.listeCommandes.add(c);}
+    public Vector<Livreur> getLivreurs(){return this.livreurs;}
+    public void setACommandeToLivreur(){
+        this.livreurs.get(compteurLivreur).addCommande(this.currentCommande);
+
+    }
+
 }
 

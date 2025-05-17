@@ -8,15 +8,19 @@ import view.VueAdmin;
 import view.VuePayement;
 
 import java.awt.*;
+import java.util.Arrays;
+import java.util.Vector;
 
 public class Main {
     public static void main(String[] args) {
         PointRaPizza pointRaPizza1 = new PointRaPizza(1, "123 Rue de la Paix");
+
+        PointRaPizza pointRaPizza2 = new model.PointRaPizza(2, "456 Avenue des Champs-Élysées");
+
+        Livreur livreur1 = new Livreur(1, "Jean Dupont", "Scooter");
+        pointRaPizza1.addLivreur(livreur1);
+        livreur1.addPointRaPizza(pointRaPizza1);
 /**
-// Points de Ra-model.Pizza
-
-        //model.PointRaPizza pointRaPizza2 = new model.PointRaPizza(2, "456 Avenue des Champs-Élysées");
-
 // Clients enregistrés
         Client client1 = new Client(123456789, "Alice", 50.0f, "789 Boulevard Saint-Germain");
         pointRaPizza1.addClient(client1); // faire les liens entre les objets 
@@ -46,9 +50,6 @@ public class Main {
         java.util.Date date1 = new java.util.Date();
 
 // Livreurs enregistrés
-        Livreur livreur1 = new Livreur(1, "Jean Dupont", "Scooter");
-        pointRaPizza1.addLivreur(livreur1); 
-        livreur1.addPointRaPizza(pointRaPizza1);
 
         // Commandes
         Commande commande1 = new Commande(1, date1, client1, pointRaPizza1, livreur1);
@@ -97,8 +98,13 @@ public class Main {
          * 3 - Lorsque le client est connecté, passée a la vue du menu
          * 4 - Le client fais ce qu'il veux puis doit payer
          * 5 - possiblement afficher les infos de la commande / livraison / du client */
-
-        Model m1 = new Model("RaPizza");
+        Vector<PointRaPizza> points = new Vector<>(Arrays.asList(
+                pointRaPizza1,pointRaPizza2
+        ));
+        Vector<Livreur> livreurs = new Vector<>(Arrays.asList(
+                livreur1, new Livreur(0424, "Baptiste","BMX")
+        ));
+        Model m1 = new Model("RaPizza", points ,livreurs);
         while(true) {
             // Afficher la vue de connexion
             ConnexionVue connexionVue = new ConnexionVue();

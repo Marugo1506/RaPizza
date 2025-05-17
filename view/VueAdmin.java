@@ -1,11 +1,11 @@
 package view;
 
 import control.ControllerAdmin;
-import model.Client;
-import model.Model;
+import model.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Vector;
 
 public class VueAdmin extends JFrame {
     private Model m;
@@ -15,6 +15,8 @@ public class VueAdmin extends JFrame {
     private ControllerAdmin controllerAdmin;
     private JButton clientsButton;
     private JButton commandButton;
+    private JButton retourButton;
+    private JButton livreurButton;
 
 
     public VueAdmin(Model m2){
@@ -49,7 +51,43 @@ public class VueAdmin extends JFrame {
                 }
             }
             case 1 ->{
-                mainPanel.add(new JLabel("Commandes"));
+                mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+                mainPanel.add(new JLabel("Commandes : "));
+                mainPanel.add(new JLabel(""));
+                for(Commande commande : m.getCommandes()){
+                    JButton boutonsDetails = new JButton("Détails");
+                    controllerAdmin.setActionCommande(boutonsDetails,commande);
+                    boutonsDetails.setBackground(Color.lightGray);
+                   boutonsDetails.setPreferredSize(new Dimension(140, 30));
+                    mainPanel.add(
+                            new JLabel("ID : " +commande.getId_commande()
+                            + " | Nom du Client : " + commande.getClient().getNom()
+                            + " | Adresse de livraison : " + commande.getClient().getAdresse()
+                            + " | Nom du Livreur : " +
+                            ((commande.getLivreur()!=null)?commande.getLivreur().nom:"Aucun livreur lié à la commande" )
+                            + " | "
+                            )
+                    );
+                    mainPanel.add(boutonsDetails);
+                }
+
+            }
+            case 2 -> {
+                mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+                mainPanel.add(new JLabel("Livreurs : "));
+                mainPanel.add(new JLabel(""));
+                for(Livreur l : m.getLivreurs()){
+                    mainPanel.add(
+                            new JLabel("ID : " + l.id_livreur
+                                    + " | Nom du Livreur : " + l.nom
+                                    + " | Véhicule utilisée : " + l.vehicule
+                                    + " | Nombre de commandes liées au Livreur : " +
+                                    l.listCommande.size()
+                                    + " | "
+                            )
+                    );
+                }
+
             }
             default -> {
                 mainPanel.add(new JLabel("Default"));
@@ -58,12 +96,26 @@ public class VueAdmin extends JFrame {
     }
     public void setController(ControllerAdmin ca){
         this.controllerAdmin = ca;
+        controllerAdmin.setAction(retourButton);
         controllerAdmin.setAction(clientsButton);
         controllerAdmin.setAction(commandButton);
+        controllerAdmin.setAction(livreurButton);
     }
 
     private void loadTopPanel(){
         topPanel = new JPanel();
+
+        retourButton =  new JButton("Retour");
+        retourButton.setBackground(Color.red);
+        retourButton.setForeground(Color.black);
+        retourButton.setContentAreaFilled(false); // enleve la couleur du click
+        retourButton.setOpaque(true); // couleur du fond
+        retourButton.setBorderPainted(false);
+        retourButton.setFocusPainted(false); // enleve le cadre bleu autour du texte
+        retourButton.setHorizontalAlignment(SwingConstants.CENTER); // texte au centre
+        retourButton.setPreferredSize(new Dimension(170, 30));
+
+
         clientsButton = new JButton("Clients");
         clientsButton.setBackground(Color.lightGray);
         clientsButton.setForeground(Color.black);
@@ -72,7 +124,7 @@ public class VueAdmin extends JFrame {
         clientsButton.setBorderPainted(false);
         clientsButton.setFocusPainted(false); // enleve le cadre bleu autour du texte
         clientsButton.setHorizontalAlignment(SwingConstants.CENTER); // texte au centre
-        clientsButton.setPreferredSize(new Dimension(250, 50));
+        clientsButton.setPreferredSize(new Dimension(170, 30));
 
         commandButton = new JButton("Commandes");
         commandButton.setBackground(Color.lightGray);
@@ -82,10 +134,23 @@ public class VueAdmin extends JFrame {
         commandButton.setBorderPainted(false);
         commandButton.setFocusPainted(false); // enleve le cadre bleu autour du texte
         commandButton.setHorizontalAlignment(SwingConstants.CENTER); // texte au centre
-        commandButton.setPreferredSize(new Dimension(250, 50));
+        commandButton.setPreferredSize(new Dimension(170, 30));
 
+        livreurButton = new JButton("Livreurs");
+        livreurButton.setBackground(Color.lightGray);
+        livreurButton.setForeground(Color.black);
+        livreurButton.setContentAreaFilled(false); // enleve la couleur du click
+        livreurButton.setOpaque(true); // couleur du fond
+        livreurButton.setBorderPainted(false);
+        livreurButton.setFocusPainted(false); // enleve le cadre bleu autour du texte
+        livreurButton.setHorizontalAlignment(SwingConstants.CENTER); // texte au centre
+        livreurButton.setPreferredSize(new Dimension(170, 30));
+
+
+        topPanel.add(retourButton);
         topPanel.add(clientsButton);
         topPanel.add(commandButton);
+        topPanel.add(livreurButton);
 
     }
 
@@ -99,6 +164,28 @@ public class VueAdmin extends JFrame {
         loadInfosIntoPanel();
         this.revalidate();
         this.repaint();
+    }
+
+    public void showCommande(Commande c){
+        JFrame commandePanel = new JFrame();
+        JPanel pane = new JPanel();
+        pane.setLayout(new BoxLayout(pane,BoxLayout.Y_AXIS));
+        pane.add(new JLabel("Contenu de la Commande : "));
+        if(c.getListLigneCommande().isEmpty()){
+            pane.add(new JLabel("La commande est vide"));
+        }
+        else {
+            for(LigneCommande lc : c.getListLigneCommande()){
+                pane.add(new JLabel(
+                        lc.getPizza().getNom_pizza() + " - " + lc.getQuantite() + "x"
+                ));
+            }
+        }
+
+        commandePanel.add(pane);
+        commandePanel.setPreferredSize(new Dimension(400, 300));
+        commandePanel.setVisible(true);
+        commandePanel.pack();
     }
 
 

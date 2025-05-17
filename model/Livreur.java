@@ -8,7 +8,7 @@ public class Livreur {
     public String nom;
     public String vehicule;
 	Vector<PointRaPizza> listPointRaPizza = new Vector<PointRaPizza> ();
-	Vector<Commande> listCommande = new Vector<Commande>();
+	public Vector<Commande> listCommande = new Vector<Commande>();
     public PointRaPizza pointRaPizza;
 
 // constructeur de model.Livreur
