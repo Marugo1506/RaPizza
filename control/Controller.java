@@ -27,10 +27,10 @@ public class Controller {
     }
 
     public void setMenuButtonActionListener( ) {
-        // reglage des actions listener des boutons du menu
+        // Reglage des actions listener des boutons du menu
         for(JMenuItem button : view.getAllButtons()) {
             button.addActionListener(e -> {
-                // Handle button click event
+                // Click event
                 System.out.println("Button clicked!" + button.getText());
                 model.setBase(button.getText());
                 view.updateView();

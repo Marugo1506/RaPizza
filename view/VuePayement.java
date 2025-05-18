@@ -4,15 +4,24 @@ import control.Controller;
 import model.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.stream.Collectors;
 
 public class VuePayement extends JFrame {
-    private Commande currentCommande;
     private Model model;
-    private JLabel soldeLabel;
-    private JLabel totalLabel;
     private Controller controller;
+    private Commande currentCommande;
+    private JLabel soldeLabel;
+
+    // Couleurs
+    public static Color red = new Color(212, 74, 40);
+    public static Color green = new Color(122, 168, 126);
+    public static Color beige = new Color(250, 250, 230, 255);
+    public static Color white = Color.WHITE;
+
+    // Polices
+    private Font titleFont = new Font("Arial", Font.BOLD, 35);
+    private Font h2Font = new Font("Arial", Font.BOLD, 22);
+    private Font textFont = new Font("Arial", Font.PLAIN, 18);
 
     public VuePayement(Model m, Controller c) {
         super("Paiement - RaPizza");
@@ -22,116 +31,95 @@ public class VuePayement extends JFrame {
 
         // Configuration de la fenêtre
         this.setLayout(new BorderLayout());
-        this.setBackground(new Color(252, 245, 235)); // Couleur de fond cohérente
+        this.setBackground(white);
         this.setSize(800, 600);
+        this.setLocationRelativeTo(null);
 
-        // Création des panels
+        // Panel principal
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setBackground(new Color(252, 245, 235));
+        mainPanel.setBackground(beige);
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // Header avec logo/titre
-        JPanel headerPanel = new JPanel();
-        headerPanel.setBackground(new Color(56, 118, 29));
-        JLabel headerLabel = new JLabel("Finalisation de la commande");
-        headerLabel.setFont(new Font("Arial", Font.BOLD, 28));
-        headerLabel.setForeground(Color.WHITE);
-        headerPanel.add(headerLabel);
+        // Titre
+        JLabel title = new JLabel("Finalisation de la commande");
+        title.setFont(titleFont);
+        title.setForeground(green);
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Panel client/solde
-        JPanel clientPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        clientPanel.setBackground(new Color(252, 245, 235));
-        clientPanel.setBorder(BorderFactory.createTitledBorder("Votre compte"));
+        // Info client
+        JPanel clientPanel = new JPanel();
+        clientPanel.setBackground(beige);
+        clientPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        soldeLabel = new JLabel(String.format("Solde actuel: %.2f€", model.getClient().getSolde()));
-        soldeLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        soldeLabel = new JLabel(String.format("Solde: %.2f€", model.getClient().getSolde()));
+        soldeLabel.setFont(h2Font);
 
         JButton rechargeButton = new JButton("+ Réapprovisionner");
-        rechargeButton.setBackground(new Color(122, 158, 126));
-        rechargeButton.setForeground(Color.WHITE);
-
-        controller.setRechargeBoutonAction(rechargeButton,this);
+        rechargeButton.setBackground(green);
+        rechargeButton.setForeground(white);
+        rechargeButton.setFont(textFont);
+        controller.setRechargeBoutonAction(rechargeButton, this);
 
         clientPanel.add(soldeLabel);
         clientPanel.add(Box.createHorizontalStrut(20));
         clientPanel.add(rechargeButton);
 
-        JPanel commandPanel = createCommandPanel();
+        // Détails commande
+        JPanel commandPanel = new JPanel();
+        commandPanel.setLayout(new BoxLayout(commandPanel, BoxLayout.Y_AXIS));
+        commandPanel.setBackground(white);
+        commandPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        commandPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JPanel paymentPanel = createPaymentPanel();
-
-        mainPanel.add(headerPanel);
-        mainPanel.add(clientPanel);
-        mainPanel.add(commandPanel);
-        mainPanel.add(paymentPanel);
-
-        this.add(mainPanel, BorderLayout.CENTER);
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.setLocationRelativeTo(null);
-    }
-
-    private JPanel createCommandPanel() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBorder(BorderFactory.createTitledBorder("Détails de la commande"));
-        panel.setBackground(Color.WHITE);
-        panel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        double total = 0;
         for (LigneCommande lc : currentCommande.getListLigneCommande()) {
-            JPanel itemPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            itemPanel.setBackground(Color.WHITE);
-
-            JLabel itemLabel = new JLabel(String.format("%d x %s", lc.getQuantite(), lc.getPizza().getNom_pizza()));
-            JLabel priceLabel = new JLabel(String.format("%.2f€", lc.getQuantite() * lc.getPizza().getPrix_de_base()));
-            priceLabel.setForeground(Vue.green);
-
-            itemPanel.add(itemLabel);
-            itemPanel.add(Box.createHorizontalGlue());
-            itemPanel.add(priceLabel);
-
-            panel.add(itemPanel);
-            total += lc.getQuantite() * lc.getPizza().getPrix_de_base();
+            JLabel item = new JLabel(String.format("%d x %s - %.2f€",
+                    lc.getQuantite(),
+                    lc.getPizza().getNom_pizza(),
+                    lc.getQuantite() * lc.getPizza().getPrix_de_base()));
+            item.setFont(textFont);
+            commandPanel.add(item);
+            commandPanel.add(Box.createVerticalStrut(5));
         }
 
         // Total
-        JPanel totalPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        totalPanel.setBackground(Color.WHITE);
+        double total = currentCommande.getListLigneCommande().stream()
+                .mapToDouble(lc -> lc.getQuantite() * lc.getPizza().getPrix_de_base())
+                .sum();
 
-        totalLabel = new JLabel(String.format("Total: %.2f€", total));
-        totalLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        totalLabel.setForeground(new Color(56, 118, 29));
-        totalPanel.add(totalLabel);
+        JLabel totalLabel = new JLabel(String.format("Total: %.2f€", total));
+        totalLabel.setFont(h2Font);
+        totalLabel.setForeground(green);
+        commandPanel.add(Box.createVerticalStrut(10));
+        commandPanel.add(totalLabel);
 
-        panel.add(totalPanel);
-
-        return panel;
-    }
-
-    private JPanel createPaymentPanel() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBackground(new Color(252, 245, 235));
-
-        // Message de paiement
-        JLabel paymentLabel = new JLabel("Le paiement se fera automatiquement via votre solde client");
-        paymentLabel.setFont(new Font("Arial", Font.ITALIC, 14));
-        paymentLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        // Bouton de paiement
+        // Bouton paiement
         JButton payButton = new JButton("Payer maintenant");
+        payButton.setBackground(green);
+        payButton.setForeground(white);
+        payButton.setFont(h2Font);
         payButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        payButton.setBackground(new Color(56, 118, 29));
-        payButton.setForeground(Color.WHITE);
-        payButton.setFont(new Font("Arial", Font.BOLD, 16));
         payButton.setPreferredSize(new Dimension(200, 50));
-        controller.setPayButtonAction(payButton,this);
+        controller.setPayButtonAction(payButton, this);
 
-        panel.add(paymentLabel);
-        panel.add(Box.createVerticalStrut(20));
-        panel.add(payButton);
+        // Message info
+        JLabel infoLabel = new JLabel("Le paiement se fera automatiquement via votre solde client");
+        infoLabel.setFont(textFont);
+        infoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        return panel;
+        // Ajout des composants
+        mainPanel.add(title);
+        mainPanel.add(Box.createVerticalStrut(20));
+        mainPanel.add(clientPanel);
+        mainPanel.add(Box.createVerticalStrut(20));
+        mainPanel.add(commandPanel);
+        mainPanel.add(Box.createVerticalStrut(20));
+        mainPanel.add(infoLabel);
+        mainPanel.add(Box.createVerticalStrut(20));
+        mainPanel.add(payButton);
+
+        this.add(mainPanel, BorderLayout.CENTER);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     public void rechargerSolde() {
@@ -153,7 +141,9 @@ public class VuePayement extends JFrame {
             // Mise à jour du solde
             Client client = model.getClient();
             client.setsolde((float) (client.getSolde() + amount));
-            updateSoldeDisplay();
+
+            // Mise à jour de l'affichage
+            soldeLabel.setText(String.format("Solde: %.2f€", client.getSolde()));
 
             JOptionPane.showMessageDialog(this,
                     String.format("Votre solde a été rechargé de %.2f€", amount),
@@ -169,8 +159,6 @@ public class VuePayement extends JFrame {
     }
 
     public void processPayment() {
-
-        // Récupère pour chaque ligne la quantité de pizza * le prix de la pizza
         double total = currentCommande.getListLigneCommande().stream()
                 .mapToDouble(lc -> lc.getQuantite() * lc.getPizza().getPrix_de_base())
                 .sum();
@@ -195,14 +183,9 @@ public class VuePayement extends JFrame {
                 "Confirmation",
                 JOptionPane.INFORMATION_MESSAGE);
 
-        // Fermeture de la fenêtre
-        this.dispose(); //libère la mémoire de l'instance de VuePayement
+        this.dispose();
         model.stopPaye();
         model.addCommandes(this.currentCommande);
         model.setACommandeToLivreur();
-    }
-
-    private void updateSoldeDisplay() {
-        soldeLabel.setText(String.format("Solde actuel: %.2f€", model.getClient().getSolde()));
     }
 }

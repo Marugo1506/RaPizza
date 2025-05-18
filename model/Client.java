@@ -4,10 +4,6 @@ import java.util.*;
 
 public class Client {
 
-    // Default constructor
-    public Client() {
-    }
-
     private String num_tel;
     private String nom;
     private float solde;

@@ -61,7 +61,7 @@ public class ConnexionVue extends JFrame {
         cancelButton.setBounds(160, 80, 100, 25);
         panel.add(cancelButton);
 
-        createButton = new JButton("CrÃ©er un compte");
+        createButton = new JButton("Créer un compte");
         createButton.setBounds(160, 200, 200, 25);
         panel.add(createButton);
     }

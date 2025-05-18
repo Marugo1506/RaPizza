@@ -281,8 +281,32 @@ public class Model {
     public Vector<Livreur> getLivreurs(){return this.livreurs;}
     public void setACommandeToLivreur(){
         this.livreurs.get(compteurLivreur).addCommande(this.currentCommande);
-
     }
 
+    public void addLivreur(String nom, String vehicule) {
+        Livreur livreur = new Livreur(compteurLivreur, nom, vehicule);
+        livreurs.add(livreur);
+        compteurLivreur++;
+    }
+
+    public void removeLivreur(Livreur l) {
+        livreurs.remove(l);
+        for (Commande commande : listeCommandes) { // Enleve le livreur de toutes les commandes
+            if (commande.getLivreur() != null && commande.getLivreur().equals(l)) {
+                commande.setLivreur(null); // Definit le livreur de la commande à null
+            }
+        }
+    }
+    public boolean numTelValide(String numTel) {
+        if (numTel.length() != 10) {
+            return false;
+        }
+        for (int i = 0; i < numTel.length(); i++) {
+            if (!Character.isDigit(numTel.charAt(i))) { // charAt(i) renvoie le caractère à l'index i
+                return false;
+            }
+        }
+        return true;
+    }
 }
 

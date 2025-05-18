@@ -98,12 +98,11 @@ public class Main {
          * 3 - Lorsque le client est connecté, passée a la vue du menu
          * 4 - Le client fais ce qu'il veux puis doit payer
          * 5 - possiblement afficher les infos de la commande / livraison / du client */
+
         Vector<PointRaPizza> points = new Vector<>(Arrays.asList(
                 pointRaPizza1,pointRaPizza2
         ));
-        Vector<Livreur> livreurs = new Vector<>(Arrays.asList(
-                livreur1, new Livreur(0424, "Baptiste","BMX")
-        ));
+        Vector<Livreur> livreurs = new Vector<>();
         Model m1 = new Model("RaPizza", points ,livreurs);
         while(true) {
             // Afficher la vue de connexion

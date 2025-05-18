@@ -40,10 +40,10 @@ public class ConnexionController {
         String nom = view.getNameCreateField().getText();
 
         if (adresse.isEmpty() || tel.isEmpty() || nom.isEmpty()
-        || !tel.matches("[0-9]{10}")) {
+        || !model.numTelValide(tel)) {
             JOptionPane.showMessageDialog(view, "Saississez des Informations correctes", "Erreur", JOptionPane.ERROR_MESSAGE);
         } else {
-            Client newClient = new Client(tel,nom,100 , adresse);
+            Client newClient = new Client(tel,nom,0 , adresse);
             model.addUser(newClient);
             JOptionPane.showMessageDialog(view, "Inscription réussie", "Succès", JOptionPane.INFORMATION_MESSAGE);
             model.setConnectedUser(newClient);

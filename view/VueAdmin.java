@@ -10,7 +10,7 @@ import java.util.Vector;
 public class VueAdmin extends JFrame {
     private Model m;
     private JPanel mainPanel;
-    private int base; // Les différents onglets de la vue
+    private int base; // 0 -> Clients, 1 -> Commandes, 2 -> Livreurs
     private JPanel topPanel;
     private ControllerAdmin controllerAdmin;
     private JButton clientsButton;
@@ -46,13 +46,13 @@ public class VueAdmin extends JFrame {
             case 0 -> {
                 mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
                 for(Client c : m.getUsers()){
-                    mainPanel.add(new JLabel(c.getNom() + " - " + c.getAdresse()
-                    + " - " + c.getNum_tel() + " - " + c.getSolde()+"€"));
+                    mainPanel.add(new JLabel( " - " + c.getNom() + " , " + c.getAdresse()
+                    + " , " + c.getNum_tel() + " , " + c.getSolde()+"€"));
                 }
             }
             case 1 ->{
                 mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-                mainPanel.add(new JLabel("Commandes : "));
+                mainPanel.add(new JLabel(" Commandes : "));
                 mainPanel.add(new JLabel(""));
                 for(Commande commande : m.getCommandes()){
                     JButton boutonsDetails = new JButton("Détails");
@@ -60,7 +60,7 @@ public class VueAdmin extends JFrame {
                     boutonsDetails.setBackground(Color.lightGray);
                    boutonsDetails.setPreferredSize(new Dimension(140, 30));
                     mainPanel.add(
-                            new JLabel("ID : " +commande.getId_commande()
+                            new JLabel(" ID : " +commande.getId_commande()
                             + " | Nom du Client : " + commande.getClient().getNom()
                             + " | Adresse de livraison : " + commande.getClient().getAdresse()
                             + " | Nom du Livreur : " +
@@ -74,10 +74,14 @@ public class VueAdmin extends JFrame {
             }
             case 2 -> {
                 mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-                mainPanel.add(new JLabel("Livreurs : "));
+                mainPanel.add(new JLabel(" Livreurs : "));
                 mainPanel.add(new JLabel(""));
                 for(Livreur l : m.getLivreurs()){
-
+                    JButton removeLivreur = new JButton("Supprimer");
+                    removeLivreur.setBackground(Color.red);
+                    removeLivreur.setPreferredSize(new Dimension(140, 30));
+                    controllerAdmin.setActionRemoveLivreur(removeLivreur,l);
+                    mainPanel.add(removeLivreur);
                     String idsCommandes = "";
                     for (Commande c : l.listCommande) {
                         idsCommandes = idsCommandes + c.getId_commande() + " - ";
@@ -85,7 +89,7 @@ public class VueAdmin extends JFrame {
 
 
                     mainPanel.add(
-                            new JLabel("ID : " + l.id_livreur
+                            new JLabel(" ID : " + l.id_livreur
                                     + " | Nom du Livreur : " + l.nom
                                     + " | Véhicule utilisée : " + l.vehicule
                                     + " | Nombre de commandes liées au Livreur : " +
@@ -96,6 +100,12 @@ public class VueAdmin extends JFrame {
                             )
                     );
                 }
+                JButton addLivreur = new JButton("Ajouter un livreur");
+
+                addLivreur.setBackground(Color.lightGray);
+                addLivreur.setPreferredSize(new Dimension(140, 30));
+                controllerAdmin.setActionAddLivreur(addLivreur);
+                mainPanel.add(addLivreur);
 
             }
             default -> {
