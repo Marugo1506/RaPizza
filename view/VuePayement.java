@@ -159,9 +159,13 @@ public class VuePayement extends JFrame {
     }
 
     public void processPayment() {
-        double total = currentCommande.getListLigneCommande().stream()
-                .mapToDouble(lc -> lc.getQuantite() * lc.getPizza().getPrix_de_base())
-                .sum();
+        double total = 0.0;
+
+        // On parcourt toutes les lignes de commande
+        for (LigneCommande lc : currentCommande.getListLigneCommande()) {
+            // Pour chaque pizza, on ajoute (quantité * prix) au total
+            total += lc.getQuantite() * lc.getPizza().getPrix_de_base();
+        }
 
         Client client = model.getClient();
 
@@ -185,6 +189,7 @@ public class VuePayement extends JFrame {
 
         this.dispose();
         model.stopPaye();
+        model.getCurrentCommande().setLivreur(model.nextLivreurs());
         model.addCommandes(this.currentCommande);
         model.setACommandeToLivreur();
     }

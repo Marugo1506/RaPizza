@@ -179,10 +179,13 @@ public void setSuivantBoutonActionListener(JButton bouton){
     public void setPayButtonAction(JButton payButton, VuePayement vp) {
         payButton.addActionListener(e -> {
             vp.processPayment();
-            model.reinitialiserCommande();
-            view.setVisible(true);
-            view.updateCommandPanel();
-            view.updateView();
+            if(!model.isPaying()){
+                model.reinitialiserCommande();
+                view.setVisible(true);
+                view.updateCommandPanel();
+                view.updateView();
+            }
+
         });
     }
 }

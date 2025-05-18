@@ -190,7 +190,7 @@ public class Model {
 
     public void initCurrentCommande(PointRaPizza pointLivraison) {
         this.currentCommande = new Commande(generateNewId(), new java.util.Date(), this.client, pointLivraison);
-        this.currentCommande.setLivreur(nextLivreurs());
+        //this.currentCommande.setLivreur(nextLivreurs());
     }
 
     // Méthode pour générer un nouvel ID (à adapter selon votre logique)
@@ -199,7 +199,7 @@ public class Model {
         return commandeID;
     }
 
-    private Livreur nextLivreurs(){
+    public Livreur nextLivreurs(){
         compteurLivreur++;
         if(compteurLivreur >= this.livreurs.size()){
             compteurLivreur = 0;

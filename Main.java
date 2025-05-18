@@ -102,7 +102,9 @@ public class Main {
         Vector<PointRaPizza> points = new Vector<>(Arrays.asList(
                 pointRaPizza1,pointRaPizza2
         ));
-        Vector<Livreur> livreurs = new Vector<>();
+        Vector<Livreur> livreurs = new Vector<>(Arrays.asList(
+                livreur1
+        ));
         Model m1 = new Model("RaPizza", points ,livreurs);
         while(true) {
             // Afficher la vue de connexion
